@@ -21,3 +21,32 @@ For example:
 - Merge sort (MPI)
 - Merge sort (CUDA)
 - Merge sort (Sequential)
+
+Pseudocode:
+
+---
+Merge Sort (Sequential):
+MergeSort(array)
+    if length of array is 1:
+        return array
+    
+    leftArray = first half of array
+    rightArray = second half of array
+
+    left = MergeSort(leftArray)
+    right = MergeSort(rightArray)
+    result = []
+
+    while left and right are not empty:
+        if first element of left is less than first element of right:
+            add first element of left to result
+            remove first element from left
+        else:
+            add first element of right to result
+            remove first element from right
+
+    add rest of left to result
+    add rest of right to result
+
+    return result
+---
