@@ -26,6 +26,7 @@ Pseudocode:
 
 ---
 Merge Sort (Sequential):
+
 MergeSort(array)
     if length of array is 1:
         return array
