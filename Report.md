@@ -1,7 +1,7 @@
 # CSCE 435 Group project
 
 ## 1. Group members:
-1. Sam Hirivlampi
+1. Sam Hirvilampi
 2. Eric Haddad
 3. Nhi Vu
 4. Irving Salinas
