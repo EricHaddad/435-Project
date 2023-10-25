@@ -14,13 +14,14 @@ Parallelizing quicksort and merge sort using MPI and CUDA. Comparing performance
 
 ## 2. _due 10/25_ Brief project description (what algorithms will you be comparing and on what architectures)
 
-For example:
+Implementing the following versions of each algorithm:
 - Quicksort (MPI)
 - Quicksort (CUDA)
 - Quicksort (Sequential)
 - Merge sort (MPI)
 - Merge sort (CUDA)
 - Merge sort (Sequential)
+We will then compare performance metrics between these implementations.
 
 Pseudocode:
 
