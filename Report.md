@@ -21,6 +21,7 @@ Implementing the following versions of each algorithm:
 - Merge sort (MPI)
 - Merge sort (CUDA)
 - Merge sort (Sequential)
+  
 We will then compare performance metrics between these implementations.
 
 Pseudocode:
