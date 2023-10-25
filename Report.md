@@ -13,7 +13,9 @@
 Parallelizing quicksort and merge sort using MPI and CUDA. Comparing performance between sequential, MPI, and CUDA implementations.
 
 Meeting/Communication Details:
+
 -GroupMe for written communication
+
 -Weekly meetings at Zach to work on the project and put things together.
 
 ## 2. _due 10/25_ Brief project description (what algorithms will you be comparing and on what architectures)
