@@ -119,6 +119,57 @@ Merge Sort (MPI):
     amount_of_data_sent = sizeof(data) * data_size
 ---
 ---
+Merge Sort (CUDA):
+
+    function mergeSortGPU(array, size){
+        //Start recording time
+    
+        //Allocate device memory and copy the input array
+        device_array = allocateDeviceMemory(size)
+    
+        //Launch quicksort kernel
+        mergeSortKernel<<<1, 1>>>(device_array...)
+        synchronizeDevice()
+    
+        //Copy sorted array to host
+        copyArrayToHost()
+    
+        //Stop recording time
+    }
+    
+    function mergeSortKernel(array, left value, right value){
+        if length of array is 1:
+            return array
+        
+        leftArray = first half of array
+        rightArray = second half of array
+    
+        left = mergeSortKernel(leftArray)
+        right = mergeSortKernel(rightArray)
+        result = []
+    
+        while left and right are not empty:
+            if first element of left is less than first element of right:
+                add first element of left to result
+                remove first element from left
+            else:
+                add first element of right to result
+                remove first element from right
+    
+        add rest of left to result
+        add rest of right to result
+
+    return result
+
+    }
+    
+    function main(){
+        //Call mergeSortGPU() with the array and size
+        mergeSortOnGPU(array, size)
+        //Output the array
+    }
+---
+---
 Quick Sort (Sequential):
 
     if length of array is 1:
