@@ -53,6 +53,72 @@ Merge Sort (Sequential):
     return result
 ---
 ---
+Merge Sort (MPI):
+
+    // Define the merge sort and merge functions
+    function mergeSort(array, low, high)
+        if low < high
+            mid = low + (high - low) / 2
+            mergeSort(array, low, mid)
+            mergeSort(array, mid + 1, high)
+            merge(array, low, mid, high)
+    
+    function merge(array, low, mid, high)
+        // Merge two sorted subarrays array[low..mid] and array[mid+1..high]
+        // Implementation details are omitted for brevity
+    
+    // Start of main program
+    
+    // Initialize MPI
+    MPI_Init(&argc, &argv)
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank)
+    MPI_Comm_size(MPI_COMM_WORLD, &size)
+    
+    // Split the data among processes
+    if rank == 0
+        // Master process: distribute data to other processes
+        for i = 1 to size - 1
+            data_to_send = split_data(i)
+            MPI_Send(data_to_send, data_to_send_size, MPI_INT, i, tag, MPI_COMM_WORLD)
+    else
+        // Worker process: receive data from master process
+        MPI_Recv(data, data_size, MPI_INT, 0, tag, MPI_COMM_WORLD, &status)
+    
+    // Start computation time
+    start_time = getCurrentTime()
+    
+    // Perform the merge sort
+    mergeSort(data, 0, data.length - 1)
+    
+    // End computation time
+    end_time = getCurrentTime()
+    computation_time = end_time - start_time
+    
+    // If not master process, send the sorted data back to master
+    if rank != 0
+        MPI_Send(data, data_size, MPI_INT, 0, tag, MPI_COMM_WORLD)
+    
+    // If master process, receive sorted data from all worker processes and merge
+    if rank == 0
+        for i = 1 to size - 1
+            MPI_Recv(sorted_data, data_size, MPI_INT, i, tag, MPI_COMM_WORLD, &status)
+            // Merge current sorted data into the final sorted array
+            merge(final_sorted_array, 0, final_sorted_array.length - 1, sorted_data.length)
+    
+    // Start communication time
+    start_comm_time = getCurrentTime()
+    
+    // Finalize MPI
+    MPI_Finalize()
+    
+    // End communication time
+    end_comm_time = getCurrentTime()
+    communication_time = end_comm_time - start_comm_time
+    
+    // Amount of data sent
+    amount_of_data_sent = sizeof(data) * data_size
+---
+---
 Quick Sort (Sequential):
 
     if length of array is 1:
