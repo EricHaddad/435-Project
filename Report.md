@@ -10,10 +10,12 @@
 
 ## 2. _due 10/25_ Project topic
 
+Parallelizing quicksort and merge sort using MPI and CUDA. Comparing performance between sequential, MPI, and CUDA implementations
+
 ## 2. _due 10/25_ Brief project description (what algorithms will you be comparing and on what architectures)
 
 For example:
-- Algorithm 1a (MPI + CUDA)
-- Algorithm 1b (MPI on each core)
-- Algorithm 2a (MPI + CUDA)
-- Algorithm 2b (MPI on each core)
+- Quicksort (MPI)
+- Quicksort (CUDA)
+- Merge sort (MPI)
+- Merge sort (CUDA)
