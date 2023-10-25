@@ -17,5 +17,7 @@ Parallelizing quicksort and merge sort using MPI and CUDA. Comparing performance
 For example:
 - Quicksort (MPI)
 - Quicksort (CUDA)
+- Quicksort (Sequential)
 - Merge sort (MPI)
 - Merge sort (CUDA)
+- Merge sort (Sequential)
