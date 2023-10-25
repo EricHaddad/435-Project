@@ -116,8 +116,57 @@ Quick Sort (MPI):
     
     // End communication time
     end_comm_time = getCurrentTime()
+
     communication_time = end_comm_time - start_comm_time
     
     // Amount of data sent
     amount_of_data_sent = sizeof(data) * data_size
+---
+---
+Quick Sort (CUDA):
+    function quicksortGPU(array, size){
+        //Start recording time
+    
+        //Allocate device memory and copy the input array
+        device_array = allocateDeviceMemory(size)
+    
+        //Launch quicksort kernel
+        quicksortKernel<<<1, 1>>>(device_array...)
+        synchronizeDevice()
+    
+        //Copy sorted array to host
+        copyArrayToHost()
+    
+        //Stop recording time
+    }
+    
+    function quicksortKernel(array, left value, right value){
+        pivot = array[(left + right) / 2]
+        i = left
+        j = right
+        
+        //Partition array into segments
+        while i <= j
+            while array[i] < pivot
+                i++
+            while array[j] > pivot
+                j--
+    
+            if i <= j
+                swap(array[i], array[j])
+                i++
+                j--
+    
+        //Recursively sort the segments
+            if left < j
+                quicksortKernel<<<1, 1>>>(array, left, j)
+            if i < right
+                quicksortKernel<<<1, 1>>>(array, i, right)
+    }
+    
+    function main(){
+        //Call quicksortGPU() with the array and size
+        quicksortOnGPU(array, size)
+        //Output the array
+    }
 ---
