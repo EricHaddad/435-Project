@@ -123,7 +123,24 @@ Quick Sort (MPI):
     amount_of_data_sent = sizeof(data) * data_size
 ---
 ---
+Quick Sort (Sequential):
+
+    if length of array is 1:
+        return array
+
+    select a pivot element from the array
+
+    array1 = elements less than pivot
+    array2 = elements greater than pivot
+
+    array1 = quicksort(array1)
+    array2 = quicksort(array2)
+
+    return array1 + array2
+---
+---
 Quick Sort (CUDA):
+
     function quicksortGPU(array, size){
         //Start recording time
     
