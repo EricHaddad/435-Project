@@ -1,0 +1,102 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /scratch/user/vuthuynhi/MPI/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_db128/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_db128.dir/build.make CMakeFiles/cmTC_db128.dir/build
+gmake[1]: Entering directory `/scratch/user/vuthuynhi/MPI/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_db128.dir/CheckSymbolExists.c.o
+/sw/eb/sw/GCCcore/10.2.0/bin/cc    -o CMakeFiles/cmTC_db128.dir/CheckSymbolExists.c.o   -c /scratch/user/vuthuynhi/MPI/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_db128
+/sw/eb/sw/CMake/3.12.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_db128.dir/link.txt --verbose=1
+/sw/eb/sw/GCCcore/10.2.0/bin/cc      CMakeFiles/cmTC_db128.dir/CheckSymbolExists.c.o  -o cmTC_db128 
+CMakeFiles/cmTC_db128.dir/CheckSymbolExists.c.o:CheckSymbolExists.c:function main: error: undefined reference to 'pthread_create'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [cmTC_db128] Error 1
+gmake[1]: Leaving directory `/scratch/user/vuthuynhi/MPI/CMakeFiles/CMakeTmp'
+gmake: *** [cmTC_db128/fast] Error 2
+
+File /scratch/user/vuthuynhi/MPI/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /scratch/user/vuthuynhi/MPI/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_b6607/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_b6607.dir/build.make CMakeFiles/cmTC_b6607.dir/build
+gmake[1]: Entering directory `/scratch/user/vuthuynhi/MPI/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b6607.dir/CheckFunctionExists.c.o
+/sw/eb/sw/GCCcore/10.2.0/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_b6607.dir/CheckFunctionExists.c.o   -c /sw/eb/sw/CMake/3.12.1/share/cmake-3.12/Modules/CheckFunctionExists.c
+Linking C executable cmTC_b6607
+/sw/eb/sw/CMake/3.12.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b6607.dir/link.txt --verbose=1
+/sw/eb/sw/GCCcore/10.2.0/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_b6607.dir/CheckFunctionExists.c.o  -o cmTC_b6607 -lpthreads 
+/sw/eb/sw/binutils/2.35-GCCcore-10.2.0/bin/ld.gold: error: cannot find -lpthreads
+CMakeFiles/cmTC_b6607.dir/CheckFunctionExists.c.o:CheckFunctionExists.c:function main: error: undefined reference to 'pthread_create'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [cmTC_b6607] Error 1
+gmake[1]: Leaving directory `/scratch/user/vuthuynhi/MPI/CMakeFiles/CMakeTmp'
+gmake: *** [cmTC_b6607/fast] Error 2
+
+
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_1afde/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_1afde.dir/build.make CMakeFiles/cmTC_1afde.dir/build
+gmake[1]: Entering directory `/scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1afde.dir/CheckSymbolExists.c.o
+/sw/eb/sw/GCCcore/10.2.0/bin/cc    -o CMakeFiles/cmTC_1afde.dir/CheckSymbolExists.c.o   -c /scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_1afde
+/sw/eb/sw/CMake/3.12.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1afde.dir/link.txt --verbose=1
+/sw/eb/sw/GCCcore/10.2.0/bin/cc      CMakeFiles/cmTC_1afde.dir/CheckSymbolExists.c.o  -o cmTC_1afde 
+CMakeFiles/cmTC_1afde.dir/CheckSymbolExists.c.o:CheckSymbolExists.c:function main: error: undefined reference to 'pthread_create'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [cmTC_1afde] Error 1
+gmake[1]: Leaving directory `/scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/CMakeTmp'
+gmake: *** [cmTC_1afde/fast] Error 2
+
+File /scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_fbf0e/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_fbf0e.dir/build.make CMakeFiles/cmTC_fbf0e.dir/build
+gmake[1]: Entering directory `/scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_fbf0e.dir/CheckFunctionExists.c.o
+/sw/eb/sw/GCCcore/10.2.0/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_fbf0e.dir/CheckFunctionExists.c.o   -c /sw/eb/sw/CMake/3.12.1/share/cmake-3.12/Modules/CheckFunctionExists.c
+Linking C executable cmTC_fbf0e
+/sw/eb/sw/CMake/3.12.1/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fbf0e.dir/link.txt --verbose=1
+/sw/eb/sw/GCCcore/10.2.0/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_fbf0e.dir/CheckFunctionExists.c.o  -o cmTC_fbf0e -lpthreads 
+/sw/eb/sw/binutils/2.35-GCCcore-10.2.0/bin/ld.gold: error: cannot find -lpthreads
+CMakeFiles/cmTC_fbf0e.dir/CheckFunctionExists.c.o:CheckFunctionExists.c:function main: error: undefined reference to 'pthread_create'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [cmTC_fbf0e] Error 1
+gmake[1]: Leaving directory `/scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/CMakeTmp'
+gmake: *** [cmTC_fbf0e/fast] Error 2
+
+

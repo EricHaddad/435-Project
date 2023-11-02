@@ -1,0 +1,17 @@
+Unsorted array: 90 71 95 78 68 66 43 49 70 71 68 4 76 81 47 83 3 67 33 31 
+Sorted array: 3 4 31 33 43 47 49 66 67 68 68 70 71 71 76 78 81 83 90 95 
+Time to sort: 0.028351 seconds
+The array is correctly sorted.
+Algorithm: Bucketsort
+ProgrammingModel: MPI
+Datatype: int
+SizeOfDatatype: 4
+InputSize: 20
+InputType: Sorted
+num_procs: 2
+num_threads: 1
+num_blocks: 0
+group_num: 1
+implementation_source: Handwritten
+JOBID        NAME                 USER                     PARTITION              NODES  CPUS  STATE        TIME         TIME_LEFT    START_TIME         REASON                   NODELIST
+9163597      JobName              vuthuynhi                short                  1      1     RUNNING      0:06         29:54        2023-11-01T23:52:0 None                     c626
