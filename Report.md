@@ -8,7 +8,7 @@
 
 ---
 
-## 2. _due 10/25_ Project topic
+## 2a. _due 10/25_ Project topic
 
 Parallelizing quicksort and merge sort using MPI and CUDA. Comparing performance between sequential, MPI, and CUDA implementations.
 
@@ -18,7 +18,7 @@ Meeting/Communication Details:
 
 -Weekly meetings at Zach to work on the project and put things together.
 
-## 2. _due 10/25_ Brief project description (what algorithms will you be comparing and on what architectures)
+## 2b. _due 10/25_ Brief project description (what algorithms will you be comparing and on what architectures)
 
 Implementing the following versions of each algorithm:
 - Quicksort (MPI)
@@ -311,3 +311,33 @@ Quick Sort (CUDA):
         //Output the array
     }
 ---
+
+## 2c. Evaluation plan - what and how will you measure and compare
+- Input sizes: 20
+- Input types: integer
+- Strong scaling (same problem size, increase number of processors/nodes): we will increase the number of processors for the same array size
+- Weak scaling (increase problem size, increase number of processors): We will increase both the array size and the number of processors
+- Number of threads in a block on the GPU: We will test to run 2,4,8,16 threads in CUDA
+
+## 3. Project Implementation
+
+# Bucketsort MPI
+---
+    In the parallel version of this algorithm implemented with MPI, the process is divided among multiple processes. Here's how it works:
+
+    Data Initialization: The root process (rank 0) initializes an array with random integers and adds padding if the array cannot be evenly divided among the available processes.
+
+    Data Distribution: The root process scatters the array to all processes using MPI's scatter function. Each process receives a chunk of the array.
+
+    Local Sorting: Each process sorts its local chunk of data using the bucket sort algorithm. The maximum value in each local chunk is used to determine the number of buckets. Each element is placed into a bucket, and then each bucket is sorted.
+
+    Data Gathering: The sorted data from each process is gathered back in the root process using MPI's gather function.
+
+    Final Sorting: The root process then sorts the gathered data using the bucket sort algorithm again to ensure complete sorting.
+
+    Correctness Check: A function checks if the final array is sorted correctly by verifying that each element is less than or equal to the one that follows it.
+
+    Throughout the algorithm, Caliper is used to time the computation and communication parts separately. The "comm" regions cover the MPI communication functions (scatter and gather), and the "comp" regions cover the computation function (bucket sort). This allows detailed performance measurements to be taken.
+---
+
+
