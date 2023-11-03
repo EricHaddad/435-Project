@@ -3,13 +3,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-using namespace std;
 
 #include <caliper/cali.h>
 #include <caliper/cali-manager.h>
 #include <adiak.hpp>
-
-int NUM_VALS;
 
 void print_elapsed(clock_t start, clock_t stop)
 {
@@ -128,15 +125,12 @@ int main(int argc, char* argv[]) {
  
         array_fill(data, NUM_VALS);
         
-        for (int i = NUM_VALS;
-             i < number_of_process * chunk_size; i++) {
-            data[i] = 0;
-        }
+        array_print(data, NUM_VALS);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
  
-    MPI_Bcast(&NUM_VALS, 1, MPI_INT, 0,
+    MPI_Bcast(&NUM_VALS, 1, MPI_FLOAT, 0,
               MPI_COMM_WORLD);
  
     chunk_size
@@ -147,8 +141,8 @@ int main(int argc, char* argv[]) {
  
     chunk = (float*)malloc(chunk_size * sizeof(float));
  
-    MPI_Scatter(data, chunk_size, MPI_INT, chunk,
-                chunk_size, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(data, chunk_size, MPI_FLOAT, chunk,
+                chunk_size, MPI_FLOAT, 0, MPI_COMM_WORLD);
     free(data);
     data = NULL;
 
@@ -158,12 +152,12 @@ int main(int argc, char* argv[]) {
                          : (NUM_VALS
                             - chunk_size * rank_of_process);
  
-    quicksort(chunk, 0, own_chunk_size);
- 
+    quicksort(chunk, 0, own_chunk_size - 1);
+
     for (int step = 1; step < number_of_process;
          step = 2 * step) {
         if (rank_of_process % (2 * step) != 0) {
-            MPI_Send(chunk, own_chunk_size, MPI_INT,
+            MPI_Send(chunk, own_chunk_size, MPI_FLOAT,
                      rank_of_process - step, 0,
                      MPI_COMM_WORLD);
             break;
@@ -181,7 +175,7 @@ int main(int argc, char* argv[]) {
             float* chunk_received;
             chunk_received = (float*)malloc(received_chunk_size * sizeof(float));
             MPI_Recv(chunk_received, received_chunk_size,
-                     MPI_INT, rank_of_process + step, 0,
+                     MPI_FLOAT, rank_of_process + step, 0,
                      MPI_COMM_WORLD, &status);
  
             data = merge(chunk, own_chunk_size, chunk_received, received_chunk_size);
@@ -208,9 +202,10 @@ int main(int argc, char* argv[]) {
     adiak::value("num_procs", number_of_process);
     adiak::value("array_size", NUM_VALS);
     adiak::value("program_name", "quicksortMPI");
-    adiak::value("array_datatype_size", sizeof(double));
+    adiak::value("array_datatype_size", sizeof(float));
      
     if (rank_of_process == 0) {
+        array_print(chunk, NUM_VALS);
         printf("Number of Processes: %d \n", number_of_process);
         printf("Number of Values: %d \n", NUM_VALS);
         printf("Whole Computation Time: %f \n", whole_computation_time);
