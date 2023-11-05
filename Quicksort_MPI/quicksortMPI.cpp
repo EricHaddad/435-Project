@@ -95,7 +95,15 @@ int main(int argc, char* argv[]) {
     int chunk_size, own_chunk_size;
     float* chunk;
     MPI_Status status;
-    const char* whole_computation = "whole_computation";
+    const char* main = "main";
+    const char* data_init = "data_init";
+    const char* comm = "comm";
+    const char* comm_large = "comm_large";
+    const char* MPIScatter = "MPI_Scatter";
+    const char* MPIBarrier = "MPI_Barrier";
+    const char* correctness_check = "correctness_check";
+    const char* MPIBcast = "MPI_Bcast";
+    const char* inputType = "random";
     
     int NUM_VALS = atoi(argv[1]);
 
@@ -106,7 +114,7 @@ int main(int argc, char* argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &number_of_process);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank_of_process);
     
-    CALI_MARK_BEGIN(whole_computation);
+    CALI_MARK_BEGIN(main);
     double whole_start_time, whole_end_time, whole_computation_time;
     whole_start_time = MPI_Wtime();
     
@@ -122,16 +130,21 @@ int main(int argc, char* argv[]) {
  
         data = (float*)malloc(number_of_process * chunk_size
                             * sizeof(float));
- 
-        array_fill(data, NUM_VALS);
         
-        array_print(data, NUM_VALS);
+        CALI_MARK_BEGIN(data_init);
+        array_fill(data, NUM_VALS);
+        CALI_MARK_END(data_init);
     }
-
+    CALI_MARK_BEGIN(comm);
+    CALI_MARK_BEGIN(comm_large);
+    
+    CALI_MARK_BEGIN(MPIBarrier);
     MPI_Barrier(MPI_COMM_WORLD);
- 
-    MPI_Bcast(&NUM_VALS, 1, MPI_FLOAT, 0,
-              MPI_COMM_WORLD);
+    CALI_MARK_END(MPIBarrier);
+    
+    CALI_MARK_BEGIN(MPIBcast);
+    MPI_Bcast(&NUM_VALS, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
+    CALI_MARK_END(MPIBcast);
  
     chunk_size
         = (NUM_VALS % number_of_process == 0)
@@ -140,11 +153,17 @@ int main(int argc, char* argv[]) {
                     / (number_of_process - 1);
  
     chunk = (float*)malloc(chunk_size * sizeof(float));
- 
+    
+    CALI_MARK_BEGIN(MPIScatter);
     MPI_Scatter(data, chunk_size, MPI_FLOAT, chunk,
                 chunk_size, MPI_FLOAT, 0, MPI_COMM_WORLD);
+    CALI_MARK_END(MPIScatter);
+    
     free(data);
     data = NULL;
+    
+    CALI_MARK_END(comm_large);
+    CALI_MARK_END(comm);
 
     own_chunk_size = (NUM_VALS
                       >= chunk_size * (rank_of_process + 1))
@@ -152,10 +171,13 @@ int main(int argc, char* argv[]) {
                          : (NUM_VALS
                             - chunk_size * rank_of_process);
  
+    CALI_MARK_BEGIN("comp");
+    CALI_MARK_BEGIN("comp_large");
     quicksort(chunk, 0, own_chunk_size - 1);
+    CALI_MARK_END("comp_large");
+    CALI_MARK_END("comp");
 
-    for (int step = 1; step < number_of_process;
-         step = 2 * step) {
+    for (int step = 1; step < number_of_process; step = 2 * step) {
         if (rank_of_process % (2 * step) != 0) {
             MPI_Send(chunk, own_chunk_size, MPI_FLOAT,
                      rank_of_process - step, 0,
@@ -184,32 +206,57 @@ int main(int argc, char* argv[]) {
             free(chunk_received);
             chunk = data;
             own_chunk_size = own_chunk_size + received_chunk_size;
+            
         }
     }
     
-    CALI_MARK_END(whole_computation);
+    if (rank_of_process == 0) {
+        CALI_MARK_BEGIN(correctness_check);
+        bool sorted = true;
+        for (int i = 1; i < own_chunk_size; i++) {
+            if (chunk[i] < chunk[i - 1]) {
+                printf("Sorting Error: Element at index %d is smaller than the element at index %d\n", i, i - 1);
+                sorted = false;
+            }
+        }
+        CALI_MARK_END(correctness_check);
+            
+        if (sorted) {
+            printf("Correctly Sorted");
+        } else {
+            printf("Incorrectly Sorted");
+        }
+        
+    }
+    
+    CALI_MARK_END(main);
     whole_end_time = MPI_Wtime();
        
     whole_computation_time = whole_end_time - whole_start_time;
-    
+
     
     adiak::init(NULL);
-    adiak::user();
-    adiak::launchdate();
-    adiak::libraries();
-    adiak::cmdline();
-    adiak::clustername();
-    adiak::value("num_procs", number_of_process);
-    adiak::value("array_size", NUM_VALS);
-    adiak::value("program_name", "quicksortMPI");
-    adiak::value("array_datatype_size", sizeof(float));
+    adiak::launchdate();    // launch date of the job
+    adiak::libraries();     // Libraries used
+    adiak::cmdline();       // Command line used to launch the job
+    adiak::clustername();   // Name of the cluster
+    adiak::value("Algorithm", "Quicksort"); // The name of the algorithm you are using (e.g., "MergeSort", "BitonicSort")
+    adiak::value("ProgrammingModel", "MPI"); // e.g., "MPI", "CUDA", "MPIwithCUDA"
+    adiak::value("Datatype", "float"); // The datatype of input elements (e.g., double, int, float)
+    adiak::value("SizeOfDatatype", sizeof(float)); // sizeof(datatype) of input elements in bytes (e.g., 1, 2, 4)
+    adiak::value("InputSize", NUM_VALS); // The number of elements in input dataset (1000)
+    adiak::value("InputType", inputType); // For sorting, this would be "Sorted", "ReverseSorted", "Random", "1%perturbed"
+    adiak::value("num_procs", number_of_process); // The number of processors (MPI ranks)
+    adiak::value("num_threads", 1); // The number of CUDA or OpenMP threads
+    adiak::value("group_num", 19); // The number of your group (integer, e.g., 1, 10)
+    adiak::value("implementation_source", "Utilized https://www.geeksforgeeks.org/implementation-of-quick-sort-using-mpi-omp-and-posix-thread/ for help"); // Where you got the source code of your algorithm; choices: ("Online", "AI", "Handwritten").
      
     if (rank_of_process == 0) {
-        array_print(chunk, NUM_VALS);
         printf("Number of Processes: %d \n", number_of_process);
         printf("Number of Values: %d \n", NUM_VALS);
         printf("Whole Computation Time: %f \n", whole_computation_time);
         adiak::value("whole_computation_time", whole_computation_time);  
+        
     }
     
     mgr.stop();
