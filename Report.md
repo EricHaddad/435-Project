@@ -408,6 +408,6 @@ Counting Sort (CUDA):
   
   Data Gathering: After each process has sorted its respective chunk, the chunks are stitched together by the root process at Rank = 0.
   
-  Sources: The skeleton of the MPI code is used from lab 2. The counting sort function/algorithm is referenced from this GeeksForGeeks implementation:     https://www.geeksforgeeks.org/counting-sort/. It is slightly modified to fit our implementation.
+    Sources: The skeleton of the MPI code is used from lab 2. The counting sort function/algorithm is referenced from this GeeksForGeeks implementation:     https://www.geeksforgeeks.org/counting-sort/. It is slightly modified to fit our implementation.
 ---
 
