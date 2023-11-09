@@ -316,7 +316,7 @@ Quick Sort (CUDA):
 ---
 Counting Sort (MPI):
   
-  function countingsort(int* arr, int n, int max_value) {
+    function countingsort(int* arr, int n, int max_value) {
       int rank, size;
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -345,7 +345,7 @@ Counting Sort (MPI):
           }
       }
   
-  }
+    }
 ---
 ---
 Counting Sort (CUDA):
