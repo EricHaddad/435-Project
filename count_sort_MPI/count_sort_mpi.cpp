@@ -12,7 +12,6 @@
 
 using namespace std;
 
-// countsort helper function
 void countsort(int *array, int n) {
     int max_element = 0;
 
@@ -27,7 +26,7 @@ void countsort(int *array, int n) {
     int *count = (int *)malloc(sizeof(int) * (max_element + 1));
     int *output = (int *)malloc(sizeof(int) * n);
 
-    // Initialize count array with zeros
+    // Populate count array with 0s
     for (int i = 0; i <= max_element; i++) {
         count[i] = 0;
     }
@@ -37,23 +36,21 @@ void countsort(int *array, int n) {
         count[array[i]]++;
     }
 
-    // Modify the count array to store the sum of counts
+    // Store sum of counts in count array
     for (int i = 1; i <= max_element; i++) {
         count[i] += count[i - 1];
     }
 
-    // Build the output array by placing elements in their sorted order
+    // Put sorted values in output array
     for (int i = n - 1; i >= 0; i--) {
         output[count[array[i]] - 1] = array[i];
         count[array[i]]--;
     }
 
-    // Copy the sorted elements back to the original array
+    // Populate original array with sorted array
     for (int i = 0; i < n; i++) {
         array[i] = output[i];
     }
-
-    // Free dynamically allocated memory
     free(count);
     free(output);
 }
