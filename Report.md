@@ -345,7 +345,7 @@ Counting Sort (MPI):
           }
       }
   
-    }
+      }
 ---
 ---
 Counting Sort (CUDA):
