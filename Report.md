@@ -410,4 +410,17 @@ Counting Sort (CUDA):
       
     Sources: The skeleton of the MPI code is used from lab 2. The counting sort function/algorithm is referenced from this GeeksForGeeks implementation:     https://www.geeksforgeeks.org/counting-sort/. It is slightly modified to fit our implementation.
 ---
-
+# Quicksort MPI
+---
+    Using MPI to parallelize the counting sort algorithm requires multiple processes such as the following:
+    
+    Initialization: The program calculates how many chunks to create based on the size of the array and the number of processes entered by the user. 
+      
+    Data Distribution: MPI evenly divides the data among the chunks in preparation for the actual sorting. 
+      
+    Sorting Step: Each process will execute the quicksort() function on its own chunk. 
+      
+    Data Gathering: After all of the chunks have been sorted, the root process combines the results together into the final array.
+      
+    Sources: The skeleton of the MPI code is adapted from lab 2. The quicksort algorithm was developed with help from https://www.geeksforgeeks.org/implementation-of-quick-sort-using-mpi-omp-and-posix-thread/. I adjusted the algorithm to fit my specific needs, but took information from their implementation. 
+---
