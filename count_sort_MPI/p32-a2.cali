@@ -131,6 +131,6 @@ __rec=node,id=138,attr=93,data=Sorted,parent=137
 __rec=node,id=139,attr=92,data=2,parent=138
 __rec=node,id=140,attr=91,data=1,parent=139
 __rec=node,id=141,attr=90,data=0,parent=140
-__rec=node,id=142,attr=89,data=1,parent=141
-__rec=node,id=143,attr=84,data=Handwritten,parent=142
+__rec=node,id=142,attr=89,data=19,parent=141
+__rec=node,id=143,attr=84,data=Handwritten+Online,parent=142
 __rec=globals,ref=155=143
