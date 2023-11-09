@@ -208,8 +208,8 @@ int main(int argc, char *argv[])
         adiak::value("num_blocks", 0);
         printf("num_blocks: 0\n");
 
-        adiak::value("group_num", 1);
-        printf("group_num: 1\n");
+        adiak::value("group_num", 19);
+        printf("group_num: 19\n");
 
         adiak::value("implementation_source", "Handwritten & Online Source");
         printf("implementation_source: Handwritten, GeeksForGeeks: https://www.geeksforgeeks.org/counting-sort/\n");
