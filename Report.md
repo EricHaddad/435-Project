@@ -23,10 +23,12 @@ Meeting/Communication Details:
 Implementing the following versions of each algorithm:
 - Quicksort (MPI)
 - Quicksort (CUDA)
-- Quicksort (Sequential)
 - Merge sort (MPI)
 - Merge sort (CUDA)
-- Merge sort (Sequential)
+- Bucket Sort (MPI)
+- Bucket Sort (CUDA)
+- Counting Sort (MPI)
+- Counting Sort (CUDA)
   
 We will then compare performance metrics between these implementations.
 
@@ -311,6 +313,60 @@ Quick Sort (CUDA):
         //Output the array
     }
 ---
+---
+Counting Sort (MPI):
+function countingsort(int* arr, int n, int max_value) {
+      int rank, size;
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+      MPI_Comm_size(MPI_COMM_WORLD, &size);
+  
+      // Initialize a count array
+      int local_count[max_value + 1];
+      for (int i = 0; i <= max_value; i++) {
+          local_count[i] = 0;
+      }
+  
+      // Count elements in the subarray
+      for (int i = local_start; i <= local_end; i++) {
+          local_count[arr[i]]++;
+      }
+  
+      // Gather local counts into global array
+      int global_count[max_value + 1];
+      MPI_Allreduce(local_count, global_count, max_value + 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+  
+      // Construct sorted array
+      for (int i = local_start, j = 0; j <= max_value; j++) {
+          while (local_count[j] > 0) {
+              arr[i] = j;
+              i++;
+              local_count[j]--;
+          }
+      }
+  
+  }
+---
+---
+Counting Sort (CUDA):
+  function countingSort(int* inputArray, int* outputArray, int arraySize, int maxValue) {
+
+      // Allocate device memory for input and output arrays
+      allocateDeviceMemory(inputArray, outputArray, arraySize, d_inputArray, d_outputArray);
+  
+      // Initialize shared count array for each block
+      int* countArray = initializeCountArray(maxValue);
+  
+      // Count elements in each block
+      countElementsInBlocks(d_inputArray, arraySize, countArray, maxValue);
+  
+      // Compute prefix sum in the shared count array
+  
+      // Update the output array with sorted elements
+      updateOutputArray(d_inputArray, d_outputArray, arraySize, countArray);
+  
+      // Copy the sorted data from device to host
+      copyDataToHost(d_outputArray, outputArray, arraySize);
+  }
 
 ## 2c. Evaluation plan - what and how will you measure and compare
 - Input sizes: 20
