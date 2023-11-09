@@ -315,7 +315,8 @@ Quick Sort (CUDA):
 ---
 ---
 Counting Sort (MPI):
-function countingsort(int* arr, int n, int max_value) {
+  
+  function countingsort(int* arr, int n, int max_value) {
       int rank, size;
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -348,7 +349,8 @@ function countingsort(int* arr, int n, int max_value) {
 ---
 ---
 Counting Sort (CUDA):
-  function countingSort(int* inputArray, int* outputArray, int arraySize, int maxValue) {
+
+    function countingSort(int* inputArray, int* outputArray, int arraySize, int maxValue) {
 
       // Allocate device memory for input and output arrays
       allocateDeviceMemory(inputArray, outputArray, arraySize, d_inputArray, d_outputArray);
