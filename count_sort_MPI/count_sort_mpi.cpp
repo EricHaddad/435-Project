@@ -214,8 +214,8 @@ int main(int argc, char *argv[])
         adiak::value("group_num", 1);
         printf("group_num: 1\n");
 
-        adiak::value("implementation_source", "Handwritten");
-        printf("implementation_source: Handwritten\n");
+        adiak::value("implementation_source", "Handwritten & Online Source");
+        printf("implementation_source: Handwritten, GeeksForGeeks: https://www.geeksforgeeks.org/counting-sort/\n");
     }
 
     MPI_Finalize();
