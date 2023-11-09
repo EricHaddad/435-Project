@@ -397,5 +397,18 @@ Counting Sort (CUDA):
 
     Throughout the algorithm, Caliper is used to time the computation and communication parts separately. The "comm" regions cover the MPI communication functions (scatter and gather), and the "comp" regions cover the computation function (bucket sort). This allows detailed performance measurements to be taken.
 ---
+# Counting Sort MPI
+---
+Using MPI to parallelize the counting sort algorithm requires multiple processes such as the following:
+Initialization: MPI figures out how many processes there are and generates an array on the root process which is Rank = 0.
 
+Data Distribution: The array is divided evenly among the number of processes and each process will independently sort its chunk. Padding is added if the array is not evenly divisble.
+
+Counting/Sorting Step: Each process will execute the countsort() function on its own chunk locally. Counting arrays are used to keep track of the number of unique element occurrences.
+
+Data Gathering: After each process has sorted its respective chunk, the chunks are stitched together by the root process at Rank = 0.
+
+Sources: The skeleton of the MPI code is used from lab 2. The counting sort function/algorithm is referenced from this GeeksForGeeks implementation: https://www.geeksforgeeks.org/counting-sort/. It is slightly modified to fit our implementation.
+
+---
 
