@@ -1,0 +1,15 @@
+Unsorted array: 46 23 85 60 21 56 71 68 26 43 22 74 87 0 14 10 34 70 16 63 
+Sorted array: 0 10 14 16 21 22 23 26 34 43 46 56 60 63 68 70 71 74 85 87 
+Time to sort: 0.026965 seconds
+The array is correctly sorted.
+Algorithm: Bucketsort
+ProgrammingModel: MPI
+Datatype: int
+SizeOfDatatype: 4
+InputSize: 20
+InputType: Sorted
+num_procs: 4
+num_threads: 1
+num_blocks: 0
+group_num: 1
+implementation_source: Handwritten
