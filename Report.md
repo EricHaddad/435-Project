@@ -427,6 +427,7 @@ Counting Sort (CUDA):
 
 # Mergesort MPI
 ---
+
   Initialization:Begin by determining the array's size and the user-input number of processes. Compute the number of chunks each process handles, considering the array size and the specified     
   processes.Initialize MPI and obtain the rank and size of the MPI communicator.
   
