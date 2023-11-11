@@ -424,3 +424,19 @@ Counting Sort (CUDA):
       
     Sources: The skeleton of the MPI code is adapted from lab 2. The quicksort algorithm was developed with help from https://www.geeksforgeeks.org/implementation-of-quick-sort-using-mpi-omp-and-posix-thread/. I adjusted the algorithm to fit my specific needs, but took information from their implementation. 
 ---
+
+# Mergesort MPI
+---
+  Initialization:Begin by determining the array's size and the user-input number of processes. Compute the number of chunks each process handles, considering the array size and the specified     
+  processes.Initialize MPI and obtain the rank and size of the MPI communicator.
+  
+  Data Distribution:Distribute the input array among processes using MPI's scatter operation.Ensure each process is informed about its chunk size and the starting index in the global array.
+  
+  Sorting Step:Execute a local counting sort on each process's designated array chunk.Local counting sort involves tallying occurrences of elements within the chunk and updating the chunk accordingly.
+  
+  Data Gathering:Assemble all sorted chunks at the root process using MPI_Gather.The root process consolidates the sorted chunks, creating the final sorted array.
+  
+  
+Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algorithm was developed with help from https://www.geeksforgeeks.org/merge-sort/. I adjusted the algorithm to fit my specific needs,     but took information from their implementation. 
+
+---
