@@ -12,6 +12,40 @@
 
 using namespace std;
 
+void sorted(int *array, int size)
+{
+    for (int i = 0; i < size; i++) {
+        array[i] = i;
+    }
+}
+
+// random sort for the algorithm
+void random_sort(int *array, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        array[i] = rand() % MAX_NUM;
+    }
+}
+
+// reverse sort for the algorithm
+void reverse_sort(int *array, int size) {
+    for (int i = 0; i < size; i++) {
+        array[i] = size - i;
+    }
+}
+
+// perturb sort for the algorithm
+void perturb(int *array, int size) {
+    for (int i = 0; i < size; i++) {
+        array[i] = i;
+    }
+    int perturb_count = size / 100;
+    for (int i = 0; i < perturb_count; i++) {
+        array[rand() % size] = rand() % size;
+    }
+}
+
 // bucketsort helper function
 void bucketsort(int *array, int n) {
     // Find maximum value to know number of buckets
@@ -58,7 +92,7 @@ int main(int argc, char *argv[])
 {
     CALI_CXX_MARK_FUNCTION;
 
-    int num_procs, rank, array_size, i;
+    int num_procs, rank, array_size;
     int *data = NULL; 
     double start_time, end_time;
 
@@ -66,14 +100,15 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    if (argc != 2)
+    if (argc != 3)
     {
-        if (rank == 0) printf("Usage: mpirun -np <num_procs> %s <array_size>\n", argv[0]);
+        if (rank == 0) printf("Usage: mpirun -np <num_procs> %s <array_size> <input_type>\n", argv[0]);
         MPI_Finalize();
         return 0;
     }
 
     array_size = atoi(argv[1]);
+    char* input_type = argv[2];
 
     if (rank == 0)
     {
@@ -83,20 +118,23 @@ int main(int argc, char *argv[])
         // initialize array with random integers
         srand(time(NULL));
         data = (int *)malloc(sizeof(int) * array_size);
-        printf("Unsorted array: ");
-        for (i = 0; i < array_size; i++)
-        {
-            data[i] = rand() % MAX_NUM;
-            printf("%d ", data[i]);
+
+        if (strcmp(input_type, "Random") == 0) {
+         random_sort(data, array_size);
+        } else if (strcmp(input_type, "Sorted") == 0) {
+            sorted(data, array_size);
+        } else if (strcmp(input_type, "Reverse") == 0) {
+            reverse_sort(data, array_size);
+        } else if (strcmp(input_type, "Perturbed") == 0) {
+            perturb(data, array_size);
         }
-        printf("\n");
 
         // add padding if array cannot be evenly divided
         if (remain != 0)
         {
             int size = array_size + num_procs - remain;
             data = (int *)realloc(data, sizeof(int) * size);
-            for (i = array_size; i < size; i++)
+            for (int i = array_size; i < size; i++)
                 data[i] = 0;
         }
         CALI_MARK_END("data_init");
@@ -144,11 +182,6 @@ int main(int argc, char *argv[])
         CALI_MARK_END("comp_large");
         CALI_MARK_END("comp");
 
-        printf("Sorted array: ");
-        for (i = 0; i < array_size; i++)
-            printf("%d ", data[i]);
-        printf("\n");
-
         printf("Time to sort: %f seconds\n", end_time - start_time);
 
         CALI_MARK_BEGIN("correctness_check");
@@ -185,20 +218,11 @@ int main(int argc, char *argv[])
         adiak::value("InputSize", array_size);
         printf("InputSize: %d\n", array_size);
 
-        adiak::value("InputType", "Sorted");
-        printf("InputType: Sorted\n");
+        adiak::value("InputType", input_type);
+        printf("InputType: %s\n", input_type);
 
         adiak::value("num_procs", num_procs);
         printf("num_procs: %d\n", num_procs);
-
-        adiak::value("num_threads", 1);
-        printf("num_threads: 1\n");
-
-        adiak::value("num_blocks", 0);
-        printf("num_blocks: 0\n");
-
-        adiak::value("group_num", 1);
-        printf("group_num: 1\n");
 
         adiak::value("implementation_source", "Handwritten");
         printf("implementation_source: Handwritten\n");
