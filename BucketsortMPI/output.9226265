@@ -1,0 +1,11 @@
+Time to sort: 0.606354 seconds
+The array is correctly sorted.
+Algorithm: Bucketsort
+ProgrammingModel: MPI
+Datatype: int
+SizeOfDatatype: 4
+InputSize: 65536
+InputType: random
+num_procs: 128
+group_num: 1
+implementation_source: Handwritten

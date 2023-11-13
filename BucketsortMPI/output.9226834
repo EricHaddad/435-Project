@@ -1,0 +1,7 @@
+The array is correctly sorted.
+Algorithm: Bucketsort
+ProgrammingModel: MPI
+Number of Processes: 256
+Number of Values: 65536
+Input Type: perturbed
+Whole computation time: 2.912662 seconds
