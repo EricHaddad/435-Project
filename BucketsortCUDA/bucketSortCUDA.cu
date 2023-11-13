@@ -98,11 +98,7 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
 
 
     // Call the kernel
-    CALI_MARK_BEGIN("comp");
-    CALI_MARK_BEGIN("comp_large");
     bucket_sort<<<dimGrid, dimBlock>>>(d_input, d_buckets, size);
-    CALI_MARK_END("comp_large");
-    CALI_MARK_END("comp");
     
 
     // Copy the buckets back to the host
@@ -117,6 +113,8 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
     CALI_MARK_END("comm_large");
     CALI_MARK_END("comm");
 
+    CALI_MARK_BEGIN("comp");
+    CALI_MARK_BEGIN("comp_large");
     // Generate the sorted array
     int pos = 0;
     for(int i = 0; i < RANGE; ++i) {
@@ -131,6 +129,8 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
             output[pos++] = bucket[j];
         }
     }
+    CALI_MARK_END("comp_large");
+    CALI_MARK_END("comp");
 
     // Clean up
     delete[] buckets;
