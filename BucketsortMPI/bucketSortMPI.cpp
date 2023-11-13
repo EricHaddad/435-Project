@@ -12,37 +12,34 @@
 
 using namespace std;
 
-void sorted(int *array, int size)
-{
-    for (int i = 0; i < size; i++) {
-        array[i] = i;
-    }
-}
-
-// random sort for the algorithm
-void random_sort(int *array, int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        array[i] = rand() % MAX_NUM;
-    }
-}
-
-// reverse sort for the algorithm
-void reverse_sort(int *array, int size) {
-    for (int i = 0; i < size; i++) {
-        array[i] = size - i;
-    }
-}
-
-// perturb sort for the algorithm
-void perturb(int *array, int size) {
-    for (int i = 0; i < size; i++) {
-        array[i] = i;
-    }
-    int perturb_count = size / 100;
-    for (int i = 0; i < perturb_count; i++) {
-        array[rand() % size] = rand() % size;
+// generate input types
+void generateInput(int *input, int size, char* type) {
+    if (strcmp(type, "sorted") == 0) {
+        for (int i = 0; i < size; i++) {
+            input[i] = i;
+        }
+    } else if (strcmp(type, "random") == 0) {
+        srand(time(NULL));
+        for (int i = 0; i < size; i++) {
+            input[i] = rand() % MAX_NUM;
+        }
+    } else if (strcmp(type, "reverse") == 0) {
+        for (int i = 0; i < size; i++) {
+            input[i] = size - i;
+        }
+    } else if (strcmp(type, "perturbed") == 0) {
+        for (int i = 0; i < size; i++) {
+            input[i] = i;
+        }
+        // Perturb 1% of the elements
+        int perturbCount = size / 100;
+        srand(time(NULL));
+        for (int i = 0; i < perturbCount; i++) {
+            // Choose random index to perturb
+            int idx = rand() % size;
+            // Perturb the value
+            input[idx] = rand() % MAX_NUM;
+        }
     }
 }
 
@@ -92,9 +89,9 @@ int main(int argc, char *argv[])
 {
     CALI_CXX_MARK_FUNCTION;
 
-    int num_procs, rank, array_size;
+    int num_procs, rank, array_size, i;
     int *data = NULL; 
-    double start_time, end_time;
+    double start_time, end_time, whole_computation_time;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
@@ -102,13 +99,18 @@ int main(int argc, char *argv[])
 
     if (argc != 3)
     {
-        if (rank == 0) printf("Usage: mpirun -np <num_procs> %s <array_size> <input_type>\n", argv[0]);
+        if (rank == 0) printf("Usage: mpirun -np <num_procs> %s <array_size>\n", argv[0]);
         MPI_Finalize();
         return 0;
     }
 
     array_size = atoi(argv[1]);
-    char* input_type = argv[2];
+    char *input_type = argv[2];
+
+    cali::ConfigManager mgr;
+    mgr.start();
+
+    start_time = MPI_Wtime();
 
     if (rank == 0)
     {
@@ -119,22 +121,14 @@ int main(int argc, char *argv[])
         srand(time(NULL));
         data = (int *)malloc(sizeof(int) * array_size);
 
-        if (strcmp(input_type, "Random") == 0) {
-         random_sort(data, array_size);
-        } else if (strcmp(input_type, "Sorted") == 0) {
-            sorted(data, array_size);
-        } else if (strcmp(input_type, "Reverse") == 0) {
-            reverse_sort(data, array_size);
-        } else if (strcmp(input_type, "Perturbed") == 0) {
-            perturb(data, array_size);
-        }
+        generateInput(data, array_size, input_type);
 
         // add padding if array cannot be evenly divided
         if (remain != 0)
         {
             int size = array_size + num_procs - remain;
             data = (int *)realloc(data, sizeof(int) * size);
-            for (int i = array_size; i < size; i++)
+            for (i = array_size; i < size; i++)
                 data[i] = 0;
         }
         CALI_MARK_END("data_init");
@@ -143,34 +137,30 @@ int main(int argc, char *argv[])
     // start timer
     CALI_MARK_BEGIN("comm");
     CALI_MARK_BEGIN("comm_large");
+
+    CALI_MARK_BEGIN("MPI_Barrier");
     MPI_Barrier(MPI_COMM_WORLD);
-    start_time = MPI_Wtime();
+    CALI_MARK_END("MPI_Barrier");
 
     // scatter array to all processes
     int scatter_size = array_size / num_procs;
     int *scatter_data = (int *)malloc(sizeof(int) * scatter_size);
-    MPI_Scatter(data, scatter_size, MPI_INT, scatter_data, scatter_size, MPI_INT, 0, MPI_COMM_WORLD);
-    CALI_MARK_END("comm_large");
-    CALI_MARK_END("comm");
 
-    // sort each process's data
-    CALI_MARK_BEGIN("comp");
-    CALI_MARK_BEGIN("comp_large");
-    bucketsort(scatter_data, scatter_size);
-    CALI_MARK_END("comp_large");
-    CALI_MARK_END("comp");
+    CALI_MARK_BEGIN("MPI_Scatter");
+    MPI_Scatter(data, scatter_size, MPI_INT, scatter_data, scatter_size, MPI_INT, 0, MPI_COMM_WORLD);
+    CALI_MARK_END("MPI_Scatter");
 
     // gather sorted arrays back to root process
-    CALI_MARK_BEGIN("comm");
-    CALI_MARK_BEGIN("comm_large");
+    CALI_MARK_BEGIN("MPI_Gather");
     MPI_Gather(scatter_data, scatter_size, MPI_INT, data, scatter_size, MPI_INT, 0, MPI_COMM_WORLD);
-    CALI_MARK_END("comm_large");
-    CALI_MARK_END("comm");
+    CALI_MARK_END("MPI_Gather");
 
-    // end timer
-    CALI_MARK_BEGIN("comm");
+
+    CALI_MARK_BEGIN("MPI_Barrier");
     MPI_Barrier(MPI_COMM_WORLD);
-    end_time = MPI_Wtime();
+    CALI_MARK_END("MPI_Barrier");
+
+    CALI_MARK_END("comm_large");
     CALI_MARK_END("comm");
 
     if (rank == 0)
@@ -182,8 +172,6 @@ int main(int argc, char *argv[])
         CALI_MARK_END("comp_large");
         CALI_MARK_END("comp");
 
-        printf("Time to sort: %f seconds\n", end_time - start_time);
-
         CALI_MARK_BEGIN("correctness_check");
         if (isSorted(data, array_size)) {
             printf("The array is correctly sorted.\n");
@@ -191,42 +179,46 @@ int main(int argc, char *argv[])
             printf("The array is not correctly sorted.\n");
         }
         CALI_MARK_END("correctness_check");
+
     }
+
+    end_time = MPI_Wtime();
+    whole_computation_time = end_time - start_time;
 
     if (data) free(data);
     if (scatter_data) free(scatter_data);
 
-    if (rank == 0) {
-        adiak::init(NULL);
-        adiak::launchdate();
-        adiak::libraries();
-        adiak::cmdline();
-        adiak::clustername();
+    adiak::init(NULL);
+    adiak::launchdate();
+    adiak::libraries();
+    adiak::cmdline();
+    adiak::clustername();
+    adiak::value("Algorithm", "Bucketsort");
+    adiak::value("ProgrammingModel", "MPI");
+    adiak::value("Datatype", "int");
+    adiak::value("SizeOfDatatype", sizeof(int));
+    adiak::value("InputSize", array_size);
+    adiak::value("InputType", input_type);
+    adiak::value("num_procs", num_procs);
+    adiak::value("num_threads", 1); // The number of CUDA or OpenMP threads
+    adiak::value("group_num", 19); // The number of your group (integer, e.g., 1, 10)
+    adiak::value("implementation_source", "Handwritten");
 
-        adiak::value("Algorithm", "Bucketsort");
+    if(rank == 0)
+    {
         printf("Algorithm: Bucketsort\n");
-
-        adiak::value("ProgrammingModel", "MPI");
         printf("ProgrammingModel: MPI\n");
-
-        adiak::value("Datatype", "int");
-        printf("Datatype: int\n");
-
-        adiak::value("SizeOfDatatype", sizeof(int));
-        printf("SizeOfDatatype: %zu\n", sizeof(int));
-
-        adiak::value("InputSize", array_size);
-        printf("InputSize: %d\n", array_size);
-
-        adiak::value("InputType", input_type);
-        printf("InputType: %s\n", input_type);
-
-        adiak::value("num_procs", num_procs);
-        printf("num_procs: %d\n", num_procs);
-
-        adiak::value("implementation_source", "Handwritten");
-        printf("implementation_source: Handwritten\n");
+        printf("Number of Processes: %d\n", num_procs);
+        printf("Number of Values: %d\n", array_size);
+        printf("Input Type: %s\n", input_type);
+        printf("Whole computation time: %f seconds\n", whole_computation_time);
+        adiak::value("Whole computation time", whole_computation_time);
     }
+
+
+    // Flush Caliper output before finalizing MPI
+    mgr.stop();
+    mgr.flush();
 
     MPI_Finalize();
     return 0;

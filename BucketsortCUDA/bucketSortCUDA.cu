@@ -83,7 +83,11 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
     // Copy data to device
     CALI_MARK_BEGIN("comm");
     CALI_MARK_BEGIN("comm_large");
+
+    CALI_MARK_BEGIN("cudaMemcpy");
     cudaMemcpy(d_input, input, size * sizeof(int), cudaMemcpyHostToDevice);
+    CALI_MARK_END("cudaMemcpy");
+
     cudaMemset(d_buckets, 0, RANGE * sizeof(int));
     CALI_MARK_END("comm_large");
     CALI_MARK_END("comm");
@@ -105,7 +109,11 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
     CALI_MARK_BEGIN("comm");
     CALI_MARK_BEGIN("comm_large");
     int *buckets = new int[RANGE];
+    
+    CALI_MARK_BEGIN("cudaMemcpy");
     cudaMemcpy(buckets, d_buckets, RANGE * sizeof(int), cudaMemcpyDeviceToHost);
+    CALI_MARK_END("cudaMemcpy");
+
     CALI_MARK_END("comm_large");
     CALI_MARK_END("comm");
 
@@ -131,7 +139,6 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
 }
 
 int main(int argc, char *argv[]) {
-    CALI_MARK_BEGIN("main");
     int size, blockSize;
 
     blockSize = atoi(argv[1]);
@@ -193,6 +200,5 @@ int main(int argc, char *argv[]) {
     adiak::value("group_num", group_number);
     adiak::value("implementation_source", implementation_source);
 
-    CALI_MARK_END("main");
     return 0;
 }
