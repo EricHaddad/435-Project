@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
     std::string inputType = input_type; 
     int num_threads = blockSize;
     int num_blocks = (size + num_threads - 1) / num_threads;
-    int group_number = 1;
+    int group_number = 19;
     std::string implementation_source = "Handwritten";
 
     printf("THREADS: %d\n", num_threads);
