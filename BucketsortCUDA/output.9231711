@@ -8,10 +8,9 @@ Due to MODULEPATH changes, the following have been reloaded:
 The following have been reloaded with a version change:
   1) GCCcore/10.2.0 => GCCcore/7.3.0
 
-
-Array is sorted correctly.
+Array is not sorted correctly.
 THREADS: 64
 NUM_VALS: 65536
 BLOCKS: 1024
-Input Type: random
-Whole computation time: 0.310s
+Input Type: sorted
+Whole computation time: 0.300s

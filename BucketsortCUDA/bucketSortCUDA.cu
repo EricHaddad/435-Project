@@ -140,6 +140,8 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
 }
 
 int main(int argc, char *argv[]) {
+    CALI_CXX_MARK_FUNCTION;
+    
     int size, blockSize;
 
     blockSize = atoi(argv[1]);
