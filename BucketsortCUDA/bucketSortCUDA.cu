@@ -82,6 +82,9 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
     cudaMemcpy(d_input, input, size * sizeof(int), cudaMemcpyHostToDevice);
     CALI_MARK_END("cudaMemcpy_host_to_device");
 
+    CALI_MARK_END("comm_large");
+    CALI_MARK_END("comm");
+
     cudaMemset(d_buckets, 0, RANGE * sizeof(int));
     
     // Define grid and block dimensions
@@ -90,13 +93,19 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
 
 
     // Call the kernel
-    CALI_MARK_BEGIN("bucket_sort_step_region");
+
+    CALI_MARK_BEGIN("comp");
+    CALI_MARK_BEGIN("comp_large");
     bucket_sort<<<dimGrid, dimBlock>>>(d_input, d_buckets, size);
-    CALI_MARK_END("bucket_sort_step_region");
+    CALI_MARK_END("comp_large");
+    CALI_MARK_END("comp");
     
 
     // Copy the buckets back to the host
     int *buckets = new int[RANGE];
+
+    CALI_MARK_BEGIN("comm");
+    CALI_MARK_BEGIN("comm_large");
     
     CALI_MARK_BEGIN("cudaMemcpy_device_to_host");
     cudaMemcpy(buckets, d_buckets, RANGE * sizeof(int), cudaMemcpyDeviceToHost);

@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+
     if (argc != 3)
     {
         if (rank == 0) printf("Usage: mpirun -np <num_procs> %s <array_size>\n", argv[0]);
@@ -136,11 +137,12 @@ int main(int argc, char *argv[])
 
     // start timer
     CALI_MARK_BEGIN("comm");
-    CALI_MARK_BEGIN("comm_large");
 
     CALI_MARK_BEGIN("MPI_Barrier");
     MPI_Barrier(MPI_COMM_WORLD);
     CALI_MARK_END("MPI_Barrier");
+
+    CALI_MARK_BEGIN("comm_large");
 
     // scatter array to all processes
     int scatter_size = array_size / num_procs;
@@ -155,12 +157,13 @@ int main(int argc, char *argv[])
     MPI_Gather(scatter_data, scatter_size, MPI_INT, data, scatter_size, MPI_INT, 0, MPI_COMM_WORLD);
     CALI_MARK_END("MPI_Gather");
 
+    CALI_MARK_END("comm_large");
+
 
     CALI_MARK_BEGIN("MPI_Barrier");
     MPI_Barrier(MPI_COMM_WORLD);
     CALI_MARK_END("MPI_Barrier");
 
-    CALI_MARK_END("comm_large");
     CALI_MARK_END("comm");
 
     if (rank == 0)
