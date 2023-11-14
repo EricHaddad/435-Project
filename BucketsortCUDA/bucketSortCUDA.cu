@@ -12,12 +12,6 @@
 
 #define RANGE 100
 
-void print_elapsed(clock_t start, clock_t stop)
-{
-  double elapsed = ((double) (stop - start)) / CLOCKS_PER_SEC;
-  printf("Whole computation time: %.3fs\n", elapsed);
-}
-
 // generate input types
 void generateInput(int *input, int size, char* type) {
     if (strcmp(type, "sorted") == 0) {
@@ -84,13 +78,11 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
     CALI_MARK_BEGIN("comm");
     CALI_MARK_BEGIN("comm_large");
 
-    CALI_MARK_BEGIN("cudaMemcpy");
+    CALI_MARK_BEGIN("cudaMemcpy_host_to_device");
     cudaMemcpy(d_input, input, size * sizeof(int), cudaMemcpyHostToDevice);
-    CALI_MARK_END("cudaMemcpy");
+    CALI_MARK_END("cudaMemcpy_host_to_device");
 
     cudaMemset(d_buckets, 0, RANGE * sizeof(int));
-    CALI_MARK_END("comm_large");
-    CALI_MARK_END("comm");
     
     // Define grid and block dimensions
     dim3 dimBlock(blockSize);
@@ -98,17 +90,17 @@ void bucketSort(int* input, int* output, int size, int blockSize) {
 
 
     // Call the kernel
+    CALI_MARK_BEGIN("bucket_sort_step_region");
     bucket_sort<<<dimGrid, dimBlock>>>(d_input, d_buckets, size);
+    CALI_MARK_END("bucket_sort_step_region");
     
 
     // Copy the buckets back to the host
-    CALI_MARK_BEGIN("comm");
-    CALI_MARK_BEGIN("comm_large");
     int *buckets = new int[RANGE];
     
-    CALI_MARK_BEGIN("cudaMemcpy");
+    CALI_MARK_BEGIN("cudaMemcpy_device_to_host");
     cudaMemcpy(buckets, d_buckets, RANGE * sizeof(int), cudaMemcpyDeviceToHost);
-    CALI_MARK_END("cudaMemcpy");
+    CALI_MARK_END("cudaMemcpy_device_to_host");
 
     CALI_MARK_END("comm_large");
     CALI_MARK_END("comm");
@@ -148,40 +140,42 @@ int main(int argc, char *argv[]) {
     int *input = new int[size];
     int *output = new int[size];
 
+    clock_t start, end;
+
     // Initialize data with user input type's values
     CALI_MARK_BEGIN("data_init");
     generateInput(input, size, input_type);
     CALI_MARK_END("data_init");
 
-    clock_t start, end;
     start = clock();
     bucketSort(input, output, size, blockSize);
     end = clock();
 
-    print_elapsed(start, end);
-
     correctness_check(output, size);
+
+    double whole_computation_time = ((double) (end - start)) / CLOCKS_PER_SEC;
 
     // Clean up
     delete[] input;
     delete[] output;
 
     // Record metadata with Adiak
-    std::string algorithm = "BucketSort"; // replace with your algorithm name
+    std::string algorithm = "BucketSort"; 
     std::string programmingModel = "CUDA";
-    std::string datatype = "int"; // replace with your data type
-    int sizeOfDatatype = sizeof(int); // replace with your data type size
-    int inputSize = size; // replace with your input size
-    std::string inputType = input_type; // replace with your input type
-    int num_threads = blockSize; // replace with your number of threads
-    int num_blocks = (size + num_threads - 1) / num_threads; // replace with your number of CUDA blocks
-    int group_number = 1; // replace with your group number
-    std::string implementation_source = "Handwritten"; // replace with your source type
+    std::string datatype = "int"; 
+    int sizeOfDatatype = sizeof(int); 
+    int inputSize = size; 
+    std::string inputType = input_type; 
+    int num_threads = blockSize;
+    int num_blocks = (size + num_threads - 1) / num_threads;
+    int group_number = 1;
+    std::string implementation_source = "Handwritten";
 
     printf("THREADS: %d\n", num_threads);
     printf("NUM_VALS: %d\n", inputSize);
     printf("BLOCKS: %d\n", num_blocks);
     printf("Input Type: %s\n", input_type);
+    printf("Whole computation time: %.3fs\n", whole_computation_time);
 
     // Initialize Adiak
     adiak::init(NULL);
@@ -195,10 +189,12 @@ int main(int argc, char *argv[]) {
     adiak::value("SizeOfDatatype", sizeOfDatatype);
     adiak::value("InputSize", inputSize);
     adiak::value("InputType", inputType);
+    adiak::value("num_procs", 1);
     adiak::value("num_threads", num_threads);
     adiak::value("num_blocks", num_blocks);
     adiak::value("group_num", group_number);
     adiak::value("implementation_source", implementation_source);
+    adiak::value("Whole Computation Time", whole_computation_time);
 
     return 0;
 }

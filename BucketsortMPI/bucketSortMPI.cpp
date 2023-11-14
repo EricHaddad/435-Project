@@ -201,7 +201,8 @@ int main(int argc, char *argv[])
     adiak::value("InputType", input_type);
     adiak::value("num_procs", num_procs);
     adiak::value("num_threads", 1); // The number of CUDA or OpenMP threads
-    adiak::value("group_num", 19); // The number of your group (integer, e.g., 1, 10)
+    adiak::value("num_blocks", 1);
+    adiak::value("group_num", 1); // The number of your group (integer, e.g., 1, 10)
     adiak::value("implementation_source", "Handwritten");
 
     if(rank == 0)
