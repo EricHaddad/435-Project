@@ -1,3 +1,0 @@
-/scratch/user/vuthuynhi/435-Project/BucketsortCUDA/CMakeFiles/rebuild_cache.dir
-/scratch/user/vuthuynhi/435-Project/BucketsortCUDA/CMakeFiles/bucketsortCUDA.dir
-/scratch/user/vuthuynhi/435-Project/BucketsortCUDA/CMakeFiles/edit_cache.dir
