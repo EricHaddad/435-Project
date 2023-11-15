@@ -21,8 +21,8 @@ Meeting/Communication Details:
 ## 2b. _due 10/25_ Brief project description (what algorithms will you be comparing and on what architectures)
 
 Implementing the following versions of each algorithm:
-- Quicksort (MPI)
-- Quicksort (CUDA)
+- Odd/Even Sort (MPI)
+- Odd/Even Sort (CUDA)
 - Merge sort (MPI)
 - Merge sort (CUDA)
 - Bucket Sort (MPI)
@@ -178,23 +178,7 @@ Merge Sort (CUDA):
     }
 ---
 ---
-Quick Sort (Sequential):
-
-    if length of array is 1:
-        return array
-
-    select a pivot element from the array
-
-    array1 = elements less than pivot
-    array2 = elements greater than pivot
-
-    array1 = quicksort(array1)
-    array2 = quicksort(array2)
-
-    return array1 + array2
----
----
-Quick Sort (MPI):
+Odd/Even Sort (MPI):
 
     // Define the quick sort and partition functions
     function quickSort(array, low, high)
@@ -202,17 +186,24 @@ Quick Sort (MPI):
             pi = partition(array, low, high)
             quickSort(array, low, pi - 1)
             quickSort(array, pi + 1, high)
+
+    function oddEvenSort(arr, n) {
+    while (!isSorted) {
+        for (int i = 1; i <= n - 2; i = i + 2) {
+            if (arr[i] > arr[i + 1]) {
+                swap(arr[i], arr[i + 1]);
+            }
+        }
+
+        for (int i = 0; i <= n - 2; i = i + 2) {
+            if (arr[i] > arr[i + 1]) {
+                swap(arr[i], arr[i + 1]);
+            }
+        }
+      }
+    }
         
-    function partition(array, low, high)
-        pivot = array[high]
-        i = (low - 1)
-        for j = low to high - 1
-            if array[j] <= pivot
-                i++
-                swap array[i] with array[j]
-        swap array[i + 1] with array[high]
-        return i + 1
-    
+  
     // Start of main program
     
     // Initialize MPI
@@ -234,7 +225,7 @@ Quick Sort (MPI):
     start_time = getCurrentTime()
     
     // Perform the quick sort
-    quickSort(data, 0, data.length - 1)
+    oddEvenSort(data, 0, data.length - 1)
     
     // End computation time
     end_time = getCurrentTime()
@@ -265,16 +256,16 @@ Quick Sort (MPI):
     amount_of_data_sent = sizeof(data) * data_size
 ---
 ---
-Quick Sort (CUDA):
+Odd/Even Sort (CUDA):
 
-    function quicksortGPU(array, size){
+    function oddEvenSortGPU(array, size){
         //Start recording time
     
         //Allocate device memory and copy the input array
         device_array = allocateDeviceMemory(size)
     
         //Launch quicksort kernel
-        quicksortKernel<<<1, 1>>>(device_array...)
+        oddEvenSortKernel<<<1, 1>>>(device_array...)
         synchronizeDevice()
     
         //Copy sorted array to host
@@ -282,34 +273,26 @@ Quick Sort (CUDA):
     
         //Stop recording time
     }
+
+
+    function oddEvenSort(arr, n) {
+        while (!isSorted) {
+            for (int i = 1; i <= n - 2; i = i + 2) {
+                if (arr[i] > arr[i + 1]) {
+                    swap(arr[i], arr[i + 1]);
+                }
+            }
     
-    function quicksortKernel(array, left value, right value){
-        pivot = array[(left + right) / 2]
-        i = left
-        j = right
-        
-        //Partition array into segments
-        while i <= j
-            while array[i] < pivot
-                i++
-            while array[j] > pivot
-                j--
-    
-            if i <= j
-                swap(array[i], array[j])
-                i++
-                j--
-    
-        //Recursively sort the segments
-            if left < j
-                quicksortKernel<<<1, 1>>>(array, left, j)
-            if i < right
-                quicksortKernel<<<1, 1>>>(array, i, right)
-    }
+            for (int i = 0; i <= n - 2; i = i + 2) {
+                if (arr[i] > arr[i + 1]) {
+                    swap(arr[i], arr[i + 1]);
+                }
+            }
+          }
+        }
     
     function main(){
-        //Call quicksortGPU() with the array and size
-        quicksortOnGPU(array, size)
+        oddEvenSortGPU(array, size)
         //Output the array
     }
 ---
@@ -410,7 +393,7 @@ Counting Sort (CUDA):
       
     Sources: The skeleton of the MPI code is used from lab 2. The counting sort function/algorithm is referenced from this GeeksForGeeks implementation:     https://www.geeksforgeeks.org/counting-sort/. It is slightly modified to fit our implementation.
 ---
-# Quicksort MPI
+# Odd Even Sort MPI
 ---
     Using MPI to parallelize the counting sort algorithm requires multiple processes such as the following:
     
@@ -418,11 +401,25 @@ Counting Sort (CUDA):
       
     Data Distribution: MPI evenly divides the data among the chunks in preparation for the actual sorting. 
       
-    Sorting Step: Each process will execute the quicksort() function on its own chunk. 
+    Sorting Step: Each process will execute the oddEvenSort() function on its own chunk. 
       
     Data Gathering: After all of the chunks have been sorted, the root process combines the results together into the final array.
       
-    Sources: The skeleton of the MPI code is adapted from lab 2. The quicksort algorithm was developed with help from https://www.geeksforgeeks.org/implementation-of-quick-sort-using-mpi-omp-and-posix-thread/. I adjusted the algorithm to fit my specific needs, but took information from their implementation. 
+    Sources: The skeleton of the MPI code is adapted from lab 2. The MPI algorithm was developed with help from https://www.geeksforgeeks.org/implementation-of-quick-sort-using-mpi-omp-and-posix-thread/. I adjusted the algorithm to fit my specific needs, but took information from their implementation. I developed the odd even sort algorithm on my own.
+---
+# Odd Even Sort CUDA
+---
+    Using CUDA to parallelize the counting sort algorithm requires multiple processes such as the following:
+    
+    Initialization: The program calculates how many chunks to create based on the size of the array and the number of processes entered by the user. 
+      
+    Data Distribution: The program creates multiple kernels and sends different parts of the data to each kernel. The kernels then sort and communicate the results back.  
+      
+    Sorting Step: Each process will execute the oddEvenSort() function on its own chunk. 
+      
+    Data Gathering: After all of the chunks have been sorted, the root process combines the results together into the final array.
+      
+    Sources: The skeleton of the CUDA code is adapted from lab 3. 
 ---
 
 # Mergesort MPI
