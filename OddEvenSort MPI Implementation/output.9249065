@@ -1,0 +1,5 @@
+srun: error: eio_message_socket_accept: slurm_receive_msg[127.0.0.1:32815]: Insane message length
+Number of Processes: 4 
+Number of Values: 1048576 
+Input Type:reverse 
+Correctly Sorted

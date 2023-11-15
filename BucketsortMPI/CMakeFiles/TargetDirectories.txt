@@ -1,0 +1,3 @@
+/scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/rebuild_cache.dir
+/scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/edit_cache.dir
+/scratch/user/vuthuynhi/435-Project/BucketsortMPI/CMakeFiles/bucketsortMPI.dir

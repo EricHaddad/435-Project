@@ -1,0 +1,7 @@
+The array is correctly sorted.
+Algorithm: Countsort
+ProgrammingModel: MPI
+Number of Processes: 2
+Number of Values: 32
+Input Type: random
+Whole computation time: 0.006291 seconds
