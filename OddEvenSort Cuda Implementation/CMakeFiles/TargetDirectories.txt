@@ -1,0 +1,3 @@
+/scratch/user/erichaddad/Cuda Implementation/CMakeFiles/rebuild_cache.dir
+/scratch/user/erichaddad/Cuda Implementation/CMakeFiles/oddEvenSort.dir
+/scratch/user/erichaddad/Cuda Implementation/CMakeFiles/edit_cache.dir
