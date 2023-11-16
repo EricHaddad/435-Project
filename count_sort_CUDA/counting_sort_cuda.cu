@@ -184,14 +184,15 @@ int main(int argc, char *argv[])
     std::string inputType = input_type; // replace with your input type
     int num_threads = blockSize; // replace with your number of threads
     int num_blocks = (size + num_threads - 1) / num_threads; // replace with your number of CUDA blocks
-    int group_number = 1; // replace with your group number
-    std::string implementation_source = "Handwritten"; // replace with your source type
+    int group_number = 19; // replace with your group number
+    std::string implementation_source = "Handwritten & Online Source: Used Lab 3 as skeleton for the file and for the algorithim implementation I modified the algorithm found here: https://www.geeksforgeeks.org/counting-sort/"; // replace with your source type
 
     printf("THREADS: %d\n", num_threads);
     printf("NUM_VALS: %d\n", inputSize);
     printf("BLOCKS: %d\n", num_blocks);
     printf("Input Type: %s\n", input_type);
-
+    
+    
     // Initialize Adiak
     adiak::init(NULL);
     adiak::launchdate();
@@ -204,6 +205,7 @@ int main(int argc, char *argv[])
     adiak::value("SizeOfDatatype", sizeOfDatatype);
     adiak::value("InputSize", inputSize);
     adiak::value("InputType", inputType);
+    adiak::value("num_procs", 1);
     adiak::value("num_threads", num_threads);
     adiak::value("num_blocks", num_blocks);
     adiak::value("group_num", group_number);
