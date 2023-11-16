@@ -503,7 +503,7 @@ Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algor
 
 1. For the CUDA implementation of Odd/Even sort, I've tested it by running the program with 256, 512, and 1024 threads. With my strong scaling studying, we see that the time to run the program decreases for a given size as we increase the number of threads. This means that the program is efficiently parallelizing. For weak scaling, when the number of threads and number of values are increased by a consistent amount, the time it takes to execute increases. 
 
-![Alt text](./OddEvenSort\Cuda\Implementation/strongscalecuda.png)
+![Alt text](./"OddEvenSort Cuda Implementation"/strongscalecuda.png)
 
 ![Alt text](./OddEvenSort\Cuda\Implementation/weakscalecuda.png)
 
