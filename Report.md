@@ -498,3 +498,15 @@ Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algor
 2. For the MPI implementation, I got an unexpected result after performing strong scaling using arrays of size 2^20 "Random" for all thread counts. In my graph we can see that performance got worse as we added more threads. We saw slight improve from 2 to 4 processes, however, beyond 4 processes performance suffered. This may be because 2^20 is a smaller array size. There can be other issues as well with how counting sort reacts with MPI.
    
 <img width="600" alt="Screenshot 2023-11-15 215759" src="https://github.com/EricHaddad/435-Project/assets/98132031/6bc67a03-e4b3-4d07-9bcb-840d509b9e12">
+
+# Odd/Even Sort
+
+1. For the CUDA implementation of Odd/Even sort, I've tested it by running the program with 256, 512, and 1024 threads. With my strong scaling studying, we see that the time to run the program decreases for a given size as we increase the number of threads. This means that the program is efficiently parallelizing. For weak scaling, when the number of threads and number of values are increased by a consistent amount, the time it takes to execute increases. 
+
+<img width="600" alt="Odd/Even Sort Cuda Strong Scaling" src="[https://github.com/EricHaddad/435-Project/assets/98132031/4afaf4d2-91bb-46dd-ae89-e40b8b924852](https://github.com/EricHaddad/435-Project/blob/master/OddEvenSort%20Cuda%20Implementation/CUDA%20Odd%3AEven%20Strong%20Scaling.png)">
+
+<img width="600" alt="Odd/Even Sort Cuda Weak Scaling" src="[https://github.com/EricHaddad/435-Project/assets/98132031/4afaf4d2-91bb-46dd-ae89-e40b8b924852](https://github.com/EricHaddad/435-Project/blob/master/OddEvenSort%20Cuda%20Implementation/CUDA%20Odd%3AEven%20Strong%20Scaling.png)](https://github.com/EricHaddad/435-Project/blob/master/OddEvenSort%20Cuda%20Implementation/CUDA%20Odd%3AEven%20Weak%20Scaling.png)">
+
+2. For the MPI implementation, I got an unexpected result after performing strong scaling using arrays of size 2^20 "Random" for all thread counts. In my graph we can see that performance got worse as we added more threads. We saw slight improve from 2 to 4 processes, however, beyond 4 processes performance suffered. This may be because 2^20 is a smaller array size. There can be other issues as well with how counting sort reacts with MPI.
+   
+<img width="600" alt="Screenshot 2023-11-15 215759" src="https://github.com/EricHaddad/435-Project/assets/98132031/6bc67a03-e4b3-4d07-9bcb-840d509b9e12">
