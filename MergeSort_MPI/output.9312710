@@ -1,0 +1,7 @@
+The array is correctly sorted.
+Algorithm: MergeSort
+ProgrammingModel: MPI
+Number of Processes: 8
+Number of Values: 1048576
+Input Type: random
+Whole computation time: 0.240621 seconds
