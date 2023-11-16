@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
     adiak::value("num_procs", num_procs);
     adiak::value("num_threads", 1); // The number of CUDA or OpenMP threads
     adiak::value("group_num", 19); // The number of your group (integer, e.g., 1, 10)
-    adiak::value("implementation_source", "Handwritten");
+    adiak::value("implementation_source", "Handwritten & Online Source: Used https://www.geeksforgeeks.org/counting-sort/ for the counting sort algorithim but made some changes to suit my program. Also used lab 2 skeleton.");
 
     if(rank == 0)
     {
