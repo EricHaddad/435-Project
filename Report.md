@@ -521,3 +521,9 @@ Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algor
 
 2. For the CUDA implementation of Merge sort, I've tested it by running the program with 2, 4, 8, 16 processes over the array size of 1024. I was not able to get the graph due to thicket issues but from the output I was able to see that it was successful and that it got faster when more processes where added which is what strong scaling study would show.
 
+
+
+
+
+
+
