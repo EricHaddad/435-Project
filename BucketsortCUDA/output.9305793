@@ -10,8 +10,8 @@ The following have been reloaded with a version change:
 
 
 Array is sorted correctly.
-THREADS: 64
-NUM_VALS: 65536
-BLOCKS: 1024
+THREADS: 256
+NUM_VALS: 1048576
+BLOCKS: 4096
 Input Type: random
-Whole computation time: 0.360s
+Whole computation time: 0.570s
