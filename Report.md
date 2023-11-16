@@ -512,3 +512,12 @@ Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algor
 ![Alt text](./OddEvenSort\MPI\Implementation/strongscalempi.png)
 
 ![Alt text](./OddEvenSort\MPI\Implementation/weakscalempi.png)
+
+# Merge Sort
+
+1. For the MPI implementation of Merge sort, I've tested it by running the program with 2, 4, and 8 threads with an array size of 2^20. With my strong scaling studying, we can see that it ran the fastest with this specific array size when it had 4 threads and slightly slowed down when we gave it 8. This probably is not the norm but it will probably change once we give it a bigger array size.
+
+![image](https://github.com/EricHaddad/435-Project/assets/90210234/af5ae9df-5a90-4db0-998e-952286663d2b)
+
+2. For the CUDA implementation of Merge sort, I've tested it by running the program with 2, 4, 8, 16 processes over the array size of 1024. I was not able to get the graph due to thicket issues but from the output I was able to see that it was successful and that it got faster when more processes where added which is what strong scaling study would show.
+
