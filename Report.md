@@ -1,6 +1,7 @@
 # CSCE 435 Group project
 
 ## 1. Group members:
+
 1. Sam Hirvilampi
 2. Eric Haddad
 3. Nhi Vu
@@ -21,6 +22,7 @@ Meeting/Communication Details:
 ## 2b. _due 10/25_ Brief project description (what algorithms will you be comparing and on what architectures)
 
 Implementing the following versions of each algorithm:
+
 - Odd/Even Sort (MPI)
 - Odd/Even Sort (CUDA)
 - Merge sort (MPI)
@@ -29,17 +31,18 @@ Implementing the following versions of each algorithm:
 - Bucket Sort (CUDA)
 - Counting Sort (MPI)
 - Counting Sort (CUDA)
-  
+
 We will then compare performance metrics between these implementations.
 
 Pseudocode:
 
 ---
+
 Merge Sort (Sequential):
 
     if length of array is 1:
         return array
-    
+
     leftArray = first half of array
     rightArray = second half of array
 
@@ -59,8 +62,11 @@ Merge Sort (Sequential):
     add rest of right to result
 
     return result
+
 ---
+
 ---
+
 Merge Sort (MPI):
 
     // Define the merge sort and merge functions
@@ -70,18 +76,18 @@ Merge Sort (MPI):
             mergeSort(array, low, mid)
             mergeSort(array, mid + 1, high)
             merge(array, low, mid, high)
-    
+
     function merge(array, low, mid, high)
         // Merge two sorted subarrays array[low..mid] and array[mid+1..high]
         // Implementation details are omitted for brevity
-    
+
     // Start of main program
-    
+
     // Initialize MPI
     MPI_Init(&argc, &argv)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank)
     MPI_Comm_size(MPI_COMM_WORLD, &size)
-    
+
     // Split the data among processes
     if rank == 0
         // Master process: distribute data to other processes
@@ -91,71 +97,74 @@ Merge Sort (MPI):
     else
         // Worker process: receive data from master process
         MPI_Recv(data, data_size, MPI_INT, 0, tag, MPI_COMM_WORLD, &status)
-    
+
     // Start computation time
     start_time = getCurrentTime()
-    
+
     // Perform the merge sort
     mergeSort(data, 0, data.length - 1)
-    
+
     // End computation time
     end_time = getCurrentTime()
     computation_time = end_time - start_time
-    
+
     // If not master process, send the sorted data back to master
     if rank != 0
         MPI_Send(data, data_size, MPI_INT, 0, tag, MPI_COMM_WORLD)
-    
+
     // If master process, receive sorted data from all worker processes and merge
     if rank == 0
         for i = 1 to size - 1
             MPI_Recv(sorted_data, data_size, MPI_INT, i, tag, MPI_COMM_WORLD, &status)
             // Merge current sorted data into the final sorted array
             merge(final_sorted_array, 0, final_sorted_array.length - 1, sorted_data.length)
-    
+
     // Start communication time
     start_comm_time = getCurrentTime()
-    
+
     // Finalize MPI
     MPI_Finalize()
-    
+
     // End communication time
     end_comm_time = getCurrentTime()
     communication_time = end_comm_time - start_comm_time
-    
+
     // Amount of data sent
     amount_of_data_sent = sizeof(data) * data_size
+
 ---
+
 ---
+
 Merge Sort (CUDA):
 
     function mergeSortGPU(array, size){
         //Start recording time
-    
+
         //Allocate device memory and copy the input array
         device_array = allocateDeviceMemory(size)
-    
+
         //Launch quicksort kernel
         mergeSortKernel<<<1, 1>>>(device_array...)
         synchronizeDevice()
-    
+
         //Copy sorted array to host
         copyArrayToHost()
-    
+
         //Stop recording time
     }
-    
+
     function mergeSortKernel(array, left value, right value){
         if length of array is 1:
             return array
-        
+
         leftArray = first half of array
         rightArray = second half of array
-    
+
         left = mergeSortKernel(leftArray)
         right = mergeSortKernel(rightArray)
         result = []
-    
+
         while left and right are not empty:
             if first element of left is less than first element of right:
                 add first element of left to result
@@ -163,21 +172,24 @@ Merge Sort (CUDA):
             else:
                 add first element of right to result
                 remove first element from right
-    
+
         add rest of left to result
         add rest of right to result
 
     return result
 
     }
-    
+
     function main(){
         //Call mergeSortGPU() with the array and size
         mergeSortOnGPU(array, size)
         //Output the array
     }
+
 ---
+
 ---
+
 Odd/Even Sort (MPI):
 
     // Define the quick sort and partition functions
@@ -202,15 +214,15 @@ Odd/Even Sort (MPI):
         }
       }
     }
-        
-  
+
+
     // Start of main program
-    
+
     // Initialize MPI
     MPI_Init(&argc, &argv)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank)
     MPI_Comm_size(MPI_COMM_WORLD, &size)
-    
+
     // Split the data among processes
     if rank == 0
         // Master process: distribute data to other processes
@@ -220,57 +232,60 @@ Odd/Even Sort (MPI):
     else
         // Worker process: receive data from master process
         MPI_Recv(data, data_size, MPI_INT, 0, tag, MPI_COMM_WORLD, &status)
-    
+
     // Start computation time
     start_time = getCurrentTime()
-    
+
     // Perform the quick sort
     oddEvenSort(data, 0, data.length - 1)
-    
+
     // End computation time
     end_time = getCurrentTime()
     computation_time = end_time - start_time
-    
+
     // If not master process, send the sorted data back to master
     if rank != 0
         MPI_Send(data, data_size, MPI_INT, 0, tag, MPI_COMM_WORLD)
-    
+
     // If master process, receive sorted data from all worker processes
     if rank == 0
         for i = 1 to size - 1
             MPI_Recv(sorted_data, data_size, MPI_INT, i, tag, MPI_COMM_WORLD, &status)
             merge sorted_data into final_sorted_array
-    
+
     // Start communication time
     start_comm_time = getCurrentTime()
-    
+
     // Finalize MPI
     MPI_Finalize()
-    
+
     // End communication time
     end_comm_time = getCurrentTime()
 
     communication_time = end_comm_time - start_comm_time
-    
+
     // Amount of data sent
     amount_of_data_sent = sizeof(data) * data_size
+
 ---
+
 ---
+
 Odd/Even Sort (CUDA):
 
     function oddEvenSortGPU(array, size){
         //Start recording time
-    
+
         //Allocate device memory and copy the input array
         device_array = allocateDeviceMemory(size)
-    
+
         //Launch quicksort kernel
         oddEvenSortKernel<<<1, 1>>>(device_array...)
         synchronizeDevice()
-    
+
         //Copy sorted array to host
         copyArrayToHost()
-    
+
         //Stop recording time
     }
 
@@ -282,7 +297,7 @@ Odd/Even Sort (CUDA):
                     swap(arr[i], arr[i + 1]);
                 }
             }
-    
+
             for (int i = 0; i <= n - 2; i = i + 2) {
                 if (arr[i] > arr[i + 1]) {
                     swap(arr[i], arr[i + 1]);
@@ -290,35 +305,38 @@ Odd/Even Sort (CUDA):
             }
           }
         }
-    
+
     function main(){
         oddEvenSortGPU(array, size)
         //Output the array
     }
+
 ---
+
 ---
+
 Counting Sort (MPI):
-  
+
     function countingsort(int* arr, int n, int max_value) {
       int rank, size;
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       MPI_Comm_size(MPI_COMM_WORLD, &size);
-  
+
       // Initialize a count array
       int local_count[max_value + 1];
       for (int i = 0; i <= max_value; i++) {
           local_count[i] = 0;
       }
-  
+
       // Count elements in the subarray
       for (int i = local_start; i <= local_end; i++) {
           local_count[arr[i]]++;
       }
-  
+
       // Gather local counts into global array
       int global_count[max_value + 1];
       MPI_Allreduce(local_count, global_count, max_value + 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-  
+
       // Construct sorted array
       for (int i = local_start, j = 0; j <= max_value; j++) {
           while (local_count[j] > 0) {
@@ -327,33 +345,38 @@ Counting Sort (MPI):
               local_count[j]--;
           }
       }
-  
+
       }
+
 ---
+
 ---
+
 Counting Sort (CUDA):
 
     function countingSort(int* inputArray, int* outputArray, int arraySize, int maxValue) {
 
       // Allocate device memory for input and output arrays
       allocateDeviceMemory(inputArray, outputArray, arraySize, d_inputArray, d_outputArray);
-  
+
       // Initialize shared count array for each block
       int* countArray = initializeCountArray(maxValue);
-  
+
       // Count elements in each block
       countElementsInBlocks(d_inputArray, arraySize, countArray, maxValue);
-  
+
       // Compute prefix sum in the shared count array
-  
+
       // Update the output array with sorted elements
       updateOutputArray(d_inputArray, d_outputArray, arraySize, countArray);
-  
+
       // Copy the sorted data from device to host
       copyDataToHost(d_outputArray, outputArray, arraySize);
-  }
+
+}
 
 ## 2c. Evaluation plan - what and how will you measure and compare
+
 - Input sizes: 20
 - Input types: integer
 - Strong scaling (same problem size, increase number of processors/nodes): we will increase the number of processors for the same array size
@@ -363,7 +386,9 @@ Counting Sort (CUDA):
 ## 3. Project Implementation
 
 # Bucketsort MPI
+
 ---
+
     In the parallel version of this algorithm implemented with MPI, the process is divided among multiple processes. Here's how it works:
 
     Data Initialization: The root process (rank 0) initializes an array with random integers and adds padding if the array cannot be evenly divided among the available processes.
@@ -379,62 +404,87 @@ Counting Sort (CUDA):
     Correctness Check: A function checks if the final array is sorted correctly by verifying that each element is less than or equal to the one that follows it.
 
     Throughout the algorithm, Caliper is used to time the computation and communication parts separately. The "comm" regions cover the MPI communication functions (scatter and gather), and the "comp" regions cover the computation function (bucket sort). This allows detailed performance measurements to be taken.
+
 ---
+
 # Counting Sort MPI
+
 ---
+
     Using MPI to parallelize the counting sort algorithm requires multiple processes such as the following:
     Initialization: MPI figures out how many processes there are and generates an array on the root process which is Rank = 0.
-      
+
     Data Distribution: The array is divided evenly among the number of processes and each process will independently sort its chunk. Padding is added if the array is not evenly divisble.
-      
+
     Counting/Sorting Step: Each process will execute the countsort() function on its own chunk locally. Counting arrays are used to keep track of the number of unique element occurrences.
-      
+
     Data Gathering: After each process has sorted its respective chunk, the chunks are stitched together by the root process at Rank = 0.
-      
+
     Sources: The skeleton of the MPI code is used from lab 2. The counting sort function/algorithm is referenced from this GeeksForGeeks implementation:     https://www.geeksforgeeks.org/counting-sort/. It is slightly modified to fit our implementation.
+
 ---
+
 # Odd Even Sort MPI
+
 ---
+
     Using MPI to parallelize the counting sort algorithm requires multiple processes such as the following:
-    
-    Initialization: The program calculates how many chunks to create based on the size of the array and the number of processes entered by the user. 
-      
-    Data Distribution: MPI evenly divides the data among the chunks in preparation for the actual sorting. 
-      
-    Sorting Step: Each process will execute the oddEvenSort() function on its own chunk. 
-      
+
+    Initialization: The program calculates how many chunks to create based on the size of the array and the number of processes entered by the user.
+
+    Data Distribution: MPI evenly divides the data among the chunks in preparation for the actual sorting.
+
+    Sorting Step: Each process will execute the oddEvenSort() function on its own chunk.
+
     Data Gathering: After all of the chunks have been sorted, the root process combines the results together into the final array.
-      
+
     Sources: The skeleton of the MPI code is adapted from lab 2. The MPI algorithm was developed with help from https://www.geeksforgeeks.org/implementation-of-quick-sort-using-mpi-omp-and-posix-thread/. I adjusted the algorithm to fit my specific needs, but took information from their implementation. I developed the odd even sort algorithm on my own.
+
 ---
+
 # Odd Even Sort CUDA
+
 ---
+
     Using CUDA to parallelize the counting sort algorithm requires multiple processes such as the following:
-    
-    Initialization: The program calculates how many chunks to create based on the size of the array and the number of processes entered by the user. 
-      
-    Data Distribution: The program creates multiple kernels and sends different parts of the data to each kernel. The kernels then sort and communicate the results back.  
-      
-    Sorting Step: Each process will execute the oddEvenSort() function on its own chunk. 
-      
+
+    Initialization: The program calculates how many chunks to create based on the size of the array and the number of processes entered by the user.
+
+    Data Distribution: The program creates multiple kernels and sends different parts of the data to each kernel. The kernels then sort and communicate the results back.
+
+    Sorting Step: Each process will execute the oddEvenSort() function on its own chunk.
+
     Data Gathering: After all of the chunks have been sorted, the root process combines the results together into the final array.
-      
-    Sources: The skeleton of the CUDA code is adapted from lab 3. 
+
+    Sources: The skeleton of the CUDA code is adapted from lab 3.
+
 ---
 
 # Mergesort MPI
----
-
-  Initialization:Begin by determining the array's size and the user-input number of processes. Compute the number of chunks each process handles, considering the array size and the specified     
-  processes.Initialize MPI and obtain the rank and size of the MPI communicator.
-  
-  Data Distribution:Distribute the input array among processes using MPI's scatter operation.Ensure each process is informed about its chunk size and the starting index in the global array.
-  
-  Sorting Step:Execute a local counting sort on each process's designated array chunk.Local counting sort involves tallying occurrences of elements within the chunk and updating the chunk accordingly.
-  
-  Data Gathering:Assemble all sorted chunks at the root process using MPI_Gather.The root process consolidates the sorted chunks, creating the final sorted array.
-  
-  
-Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algorithm was developed with help from https://www.geeksforgeeks.org/merge-sort/. I adjusted the algorithm to fit my specific needs,     but took information from their implementation. 
 
 ---
+
+Initialization:Begin by determining the array's size and the user-input number of processes. Compute the number of chunks each process handles, considering the array size and the specified  
+ processes.Initialize MPI and obtain the rank and size of the MPI communicator.
+
+Data Distribution:Distribute the input array among processes using MPI's scatter operation.Ensure each process is informed about its chunk size and the starting index in the global array.
+
+Sorting Step:Execute a local counting sort on each process's designated array chunk.Local counting sort involves tallying occurrences of elements within the chunk and updating the chunk accordingly.
+
+Data Gathering:Assemble all sorted chunks at the root process using MPI_Gather.The root process consolidates the sorted chunks, creating the final sorted array.
+
+Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algorithm was developed with help from https://www.geeksforgeeks.org/merge-sort/. I adjusted the algorithm to fit my specific needs, but took information from their implementation.
+
+---
+
+## 4. Performance Evaluation
+
+# Bucketsort
+
+1. For the implementation using CUDA, I have calculated the results using strong scaling and it has shown that as the number of threads increase, the average GPU time to run main has went down. Except for when the number of threads passed 1024, which represent the capped for the sorting algorithm and that 512 threads would be take the least amount of time to sort a random array using bucket sort.
+
+![Alt text](./BucketsortCUDA/image.png)
+
+2. For the implementation using MPI, I have calculated the results using strong scaling and it has shown that as the number of processes increase, the amount of time to run the algorithm also increased. There was also a dip at 64 processes and increase the time again at 128 processes.
+
+![Alt text](./BucketsortMPI/image-1.png)
