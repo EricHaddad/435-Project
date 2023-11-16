@@ -493,8 +493,8 @@ Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algor
 
 1. For the CUDA implementation, I graphed the results for 2^20 "random" values for 64, 128, 256, 512, 1024 threads using strong scaling. As we can see in the graph, time decreased as we added more threads except for 256 threads. I ran the job twice with 256 threads and both times there was a spike. The best performance was at 1024 threads and worst performance was at 64 threads. I believe there may have been a limitation relating to the block size and threads specifically at 256 threads.
 
-<img width="500" alt="Screenshot 2023-11-15 211908" src="https://github.com/EricHaddad/435-Project/assets/98132031/4afaf4d2-91bb-46dd-ae89-e40b8b924852">
+<img width="600" alt="Screenshot 2023-11-15 211908" src="https://github.com/EricHaddad/435-Project/assets/98132031/4afaf4d2-91bb-46dd-ae89-e40b8b924852">
 
 2. For the MPI implementation, I got an unexpected result after performing strong scaling using arrays of size 2^20 "Random" for all thread counts. In my graph we can see that performance got worse as we added more threads. We saw slight improve from 2 to 4 processes, however, beyond 4 processes performance suffered. This may be because 2^20 is a smaller array size. There can be other issues as well with how counting sort reacts with MPI.
    
-<img width="345" alt="Screenshot 2023-11-15 215759" src="https://github.com/EricHaddad/435-Project/assets/98132031/6bc67a03-e4b3-4d07-9bcb-840d509b9e12">
+<img width="600" alt="Screenshot 2023-11-15 215759" src="https://github.com/EricHaddad/435-Project/assets/98132031/6bc67a03-e4b3-4d07-9bcb-840d509b9e12">
