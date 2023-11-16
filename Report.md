@@ -503,12 +503,12 @@ Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algor
 
 1. For the CUDA implementation of Odd/Even sort, I've tested it by running the program with 256, 512, and 1024 threads. With my strong scaling studying, we see that the time to run the program decreases for a given size as we increase the number of threads. This means that the program is efficiently parallelizing. For weak scaling, when the number of threads and number of values are increased by a consistent amount, the time it takes to execute increases. 
 
-<img width="600" alt="Odd/Even Sort Cuda Strong Scaling" src="https://github.com/EricHaddad/435-Project/blob/master/OddEvenSort%20Cuda%20Implementation/CUDA%20Odd%3AEven%20Strong%20Scaling.png">
+![Alt text](./OddEvenSort\Cuda\Implementation/strongscalingcuda.png)
 
-<img width="600" alt="Odd/Even Sort Cuda Weak Scaling" src="https://github.com/EricHaddad/435-Project/blob/master/OddEvenSort%20Cuda%20Implementation/CUDA%20Odd%3AEven%20Weak%20Scaling.png">
+![Alt text](./OddEvenSort\Cuda\Implementation/weakscalingcuda.png)
 
 2. For the MPI implementation of Odd/Even sort, I've tested it by running the program with 2, 4, 8, 16, 32, 64, 128, 256, and 512 processes over numerous array sizes. Similar to CUDA, the strong scaling study shows that as we increase the processes, the running time of the program decreases for a constant array size. Additionally, for weak scaling, the time it takes to execute the program increases even when the number of processes and number of values are increased consistently. 
    
-<img width="600" alt="Odd/Even Sort MPI Strong Scaling" src="https://github.com/EricHaddad/435-Project/blob/master/OddEvenSort%20MPI%20Implementation/MPI%20Odd%3AEven%20Strong%20Scaling.png">
+![Alt text](./OddEvenSort\MPI\Implementation/strongscalingmpi.png)
 
-<img width="600" alt="Odd/Even Sort MPI Weak Scaling" src="https://github.com/EricHaddad/435-Project/blob/master/OddEvenSort%20MPI%20Implementation/MPI%20Odd%3AEven%20Weak%20Scaling.png">
+![Alt text](./OddEvenSort\MPI\Implementation/weakscalingmpi.png)
