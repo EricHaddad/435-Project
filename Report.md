@@ -527,6 +527,7 @@ Odd Even Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/Odd%
 
 Counting Sort Graphs: https://github.com/EricHaddad/435-Project/blob/6d2632f8e5379d8633578230cbb14e2acfac9ca1/Counting_Sort_Graphs.pdf
 
+Bucket Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/Bucket%20Sort%20Graphs.pdf
 
 
 
