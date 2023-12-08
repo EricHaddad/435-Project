@@ -531,6 +531,7 @@ Counting Sort Graphs: https://github.com/EricHaddad/435-Project/blob/6d2632f8e53
 
 Bucket Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/Bucket%20Sort%20Graphs.pdf
 
+Merge Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/MergeSort_Graphs.pdf
 
 
 
