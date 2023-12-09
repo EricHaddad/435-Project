@@ -540,4 +540,24 @@ Merge Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/MergeSo
 The CUDA graphs and implementation was poorly optimized because Bucket Sort cannot be parallelized by CUDA, so I have implemented CUDA method similar to MPI and perform CUDA kernel and sorting computation in comp_large.
 
 
+### Counting Sort Implementation & Analysis:
+-MPI-
+For the MPI implementation, I parallelized the sort algorithm using the divide-and-conquer strategy. The input array gets divided into equal chunks and the processes are assigned
+to those chunks to have equivalent workloads. Each chunk is sorted sequentially and then the sorted chunks are merged by the root process. This is done using MPI Scatter and Gather.
+
+For MPI, the computation time weak scaled relatively well however the communication had some interesting behavior where the two largest array sizes weak scaled well but the smaller array sizes did not weak scale well. Overall for MPI, we did not see benefits from parallelization. The speedup was around 1 or less meaning there was no benefit. One bottleneck I believe occurred was that I misunderstood the number of nodes needed for each processor amount. I was under the interpretation that 1 node is 48 cores which is 96 threads so 1 node would be enough for up to 64 processes. And I was allocating nodes based on the ceiling of # processes / 96.
+The computation time did not strong-scale as a result of this and the time increased with processes. Communication overhead was also overwhelming the total time of the whole algorithm which hurt the speed up.
+The best input type for this implementation was random as it had the smallest computation time although it did have higher communication time as well. There was no "best process" number but the implementation suffered quite a bit after 32 processes partially due to not allocating enough nodes.
+
+-CUDA-
+For the CUDA implementation, I parallelized the kernel by creating a thread index and a block index to calculate the global index of the element each thread should process. In this implementation, each thread in the GPU is responsible for processing one element of the input array. The kernel also uses atomicAdd to perform atomic increments on the corresponding element in the output array. Since counting sort is inherently recursive, it doesn't require recursion in the code. 
+
+For CUDA, we did see slight strong-scaling for computation time on the smaller array sizes but after 2^18 we no longer strong-scaled well. Communication weak-scaled well but computation again did not weak-scale very well. Since CUDA does not have the same level of communication overhead as MPI, we can see communication stayed consistent among thread counts. Perturbed did take the most amount of time in terms of communication. The best input type for this implementation was sorted. It had the lowest computation times and low communication time. Similarly to MPI, the smallest array size had the best speedup for random input type but there was no clear winner overall since speedup was very different for each input type. Overall, CUDA experienced very little to no speedup as well. The bottleneck for CUDA is most likely in the kernel where atomicAdd is being used and the global index is being calculated. Both of those operations limit parallelization.
+
+-Summary-
+Counting Sort did not experience benefits from parallelization. A big reason for this is that Counting Sort requires global communication and synchronization across threads/processes which is very expensive. A bottleneck that needs to be considered with Counting Sort is that it can only sort integers and if the range of integers is large, it will hurt performance. For my implementations, I kept the range from 0 to 99. Although Counting Sort does have some inherent parallelism in some areas such as generating the counting array, it is not the best option available.
+
+-Sources-
+For MPI, the counting sort algorithm itself is sequential. I got the source code for the implementation from geeksforgeeks: https://www.geeksforgeeks.org/counting-sort/
+For CUDA, in addition to the geeksforgeeks site, I used the NVIDIA forums here: https://forums.developer.nvidia.com/t/counting-sort/17984. For the kernel implementation, I also referenced this implementation from github to understand the kernel structure but did not copy this code. Modified it for my needs: https://github.com/marcoplaitano/counting-sort-cuda/blob/master/src/main.cu
 
