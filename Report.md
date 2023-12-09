@@ -534,7 +534,10 @@ Bucket Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/Bucket
 Merge Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/MergeSort_Graphs.pdf
 
 
+## 6. Final Report Analysis
 
+# Bucket Sort:
+The CUDA graphs and implementation was poorly optimized because Bucket Sort cannot be parallelized by CUDA, so I have implemented CUDA method similar to MPI and perform CUDA kernel and sorting computation in comp_large.
 
 
 
