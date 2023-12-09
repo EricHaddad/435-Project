@@ -539,6 +539,9 @@ Merge Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/MergeSo
 ### Bucket Sort:
 The CUDA graphs and implementation was poorly optimized because Bucket Sort cannot be parallelized by CUDA, so I have implemented CUDA method similar to MPI and perform CUDA kernel and sorting computation in comp_large.
 
+### Odd/Even Sort:
+
+My MPI speedup graphs shows large speedup, especially as we increase the number of values being sorted and processes. While it may look unreasonable, my implementation was not the most optimal for smaller amounts of processes, so the speedup achieved with more processes is immense. I calculated the speedup using the time it took to run on 2 processes (which is the minimum amount I tested my code on). 
 
 ### Counting Sort Implementation & Analysis:
 **-MPI-**
