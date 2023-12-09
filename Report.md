@@ -537,7 +537,15 @@ Merge Sort Graphs: https://github.com/EricHaddad/435-Project/blob/master/MergeSo
 ## 6. Final Report Analysis
 
 ### Bucket Sort:
-The CUDA graphs and implementation was poorly optimized because Bucket Sort cannot be parallelized by CUDA, so I have implemented CUDA method similar to MPI and perform CUDA kernel and sorting computation in comp_large.
+**CUDA**
+For the CUDA implementation, I wasn't able to parallelized the sorting algorithm using the GPU, so I tried to implement similar to MPI by diving the array into buckets and sort within the bucket. However, since parallelization doesn't work for Bucket Sort I had one thread in the GPU responsible for dividing the array into fixed size buckets and sort within the bucket. Once the local sorting is complete, the sorted buckets are merged by the same thread.
+
+The poor optimization using GPU is shown through the strong-scaling graphs, where the it is linear for computation, communication and main in all different array sizes. As for weak-scaling, it is linear throughout all communication, computation, and main because only one thread is doing all the sorting and calculation so it is not actually parallelized. And as for Speedup, it was similar to strong-scaling and weak-scaling where the graphs are linear for communication, computation, and main across all different input types.
+
+**MPI**
+For the MPI implementation, I was able to parallelized the sorting algorithm that finds the maximum value in the input array to determine the number of buckets needed to perform the sorting. It sorts each bucket using the sort function and concatenated all the sorted buckets into a final array. The array is scattered to all processes using MPI_SCATTER and gathered from all processes back by using MPI_GATHER.
+
+For MPI, the main time for weak-scaling was poorly optimized because it did not show a linear graph like CUDA, and all of the array sizes except for 2^26 and 2^28 shows an increase. but 2^26 and 2^28 shows a decrease line. For strong-scaling, all of the graphs are increasing except for 2^26 and 2^28 are decreasing. The overall speedup shows some benefit because all of the input types besides random display lines above 1, which means that there is a benefit from speedup. 
 
 ### Odd/Even Sort:
 
