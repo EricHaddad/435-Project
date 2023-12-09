@@ -481,7 +481,7 @@ Sources: The skeleton of the MPI code is adapted from lab 2. The mergesort algor
 
 # Bucketsort
 
-1. For the implementation using CUDA, I have calculated the results using strong scaling and it has shown that as the number of threads increase, the average GPU time to run main has went down. Except for when the number of threads passed 1024, which represent the capped for the sorting algorithm and that 512 threads would be take the least amount of time to sort a random array using bucket sort.
+1. For the implementation using CUDA, I have calculated the results using strong scaling and it has shown that as the number of threads increase, the average GPU time to run main has went down. Except for when the number of threads passed 1024, which represent the capped for the sorting algorithm and that 512 threads would be take the least amount of time to sort a random array using bucket sort. However, Bucket Sort wasn't able to parallelized using the GPU, so I have tried to implement the code for CUDA similar to MPI.
 
 ![Alt text](./BucketsortCUDA/image.png)
 
