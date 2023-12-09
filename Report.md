@@ -543,6 +543,11 @@ The CUDA graphs and implementation was poorly optimized because Bucket Sort cann
 
 My MPI speedup graphs shows large speedup, especially as we increase the number of values being sorted and processes. While it may look unreasonable, my implementation was not the most optimal for smaller amounts of processes, so the speedup achieved with more processes is immense. I calculated the speedup using the time it took to run on 2 processes (which is the minimum amount I tested my code on). 
 
+### Merge Sort:
+
+My CUDA graphs show a big difference for every value after 2^16 because of the different implementation I did after that. Since the first implementation was not the best for bigger values, I changed it by using parallelism at the level of merging instead of recursively sorting individual subarrays after running the ones for value 2^16 which is why we see a difference in lines and behavior. The second implementation was more optimal for CUDA. Some values were not read for some of my weak scale especially for comp_time and comm but everything on main time was great.  My MPI implementation was parallelized by dividing the data among MPI processes and making it sort locally and exchanging data with neighbor processes and sorting the subarrays of that. This implementation was great for this and can be seen on the graphs.
+
+
 ### Counting Sort Implementation & Analysis:
 **-MPI-**
 
